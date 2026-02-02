@@ -2,6 +2,11 @@
   "tasks": {
     "test": "deno test --allow-read --allow-write",
     "gen:fixtures": "/Applications/SuperCollider.app/Contents/MacOS/sclang scripts/generate-fixtures.scd",
-    "codegen": "deno run --allow-read --allow-write codegen/run.ts"
-  }
+    "codegen": "deno run --allow-read --allow-write codegen/run.ts",
+    "play": "deno run --allow-net --allow-read tests/play.ts"
+  },
+  "imports": {
+    "node-osc": "npm:node-osc@9.1.3"
+  },
+  "nodeModulesDir": "auto"
 }

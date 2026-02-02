@@ -1,0 +1,33 @@
+{
+  "exclude": [
+    "UGen",
+    "MultiOutUGen",
+    "PureUGen",
+    "PureMultiOutUGen",
+    "AbstractIn",
+    "AbstractOut",
+    "WidthFirstUGen",
+    "Control",
+    "AudioControl",
+    "TrigControl",
+    "LagControl",
+    "UnaryOpUGen",
+    "BinaryOpUGen",
+    "MulAdd",
+    "Sum3",
+    "Sum4",
+    "OutputProxy",
+    "MaxLocalBufs"
+  ],
+  "custom": {
+    "EnvGen": { "kind": "envgen" },
+    "IEnvGen": { "kind": "ienvgen" },
+    "Poll": { "kind": "poll" },
+    "Dpoll": { "kind": "dpoll" },
+    "Dwrand": { "kind": "dwrand" },
+    "SendReply": { "kind": "sendreply" },
+    "LocalIn": { "kind": "localin" },
+    "LocalBuf": { "kind": "localbuf" },
+    "SendPeakRMS": { "kind": "sendpeakrms" }
+  }
+}

@@ -1,7 +1,13 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@std/random@~0.1.5": "0.1.5",
     "npm:node-osc@9.1.3": "9.1.3"
+  },
+  "jsr": {
+    "@std/random@0.1.5": {
+      "integrity": "d26614c4f6c441afc22397a1c5b8f27d02ab8f5572f1d29e7b0cd57f3d548235"
+    }
   },
   "npm": {
     "binpack@0.1.0": {
@@ -22,6 +28,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/random@~0.1.5",
       "npm:node-osc@9.1.3"
     ]
   }

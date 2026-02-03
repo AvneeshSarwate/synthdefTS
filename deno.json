@@ -6,6 +6,7 @@
     "play": "deno run --allow-net --allow-read tests/play.ts"
   },
   "imports": {
+    "@std/random": "jsr:@std/random@^0.1.5",
     "node-osc": "npm:node-osc@9.1.3"
   },
   "nodeModulesDir": "auto"

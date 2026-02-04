@@ -69,6 +69,15 @@ function newSynth(
   client.send("/s_new", ...args);
 }
 
+/** Set controls on an existing synth. */
+function setNode(nodeId: number, controls: Record<string, number>): void {
+  const args: (string | number)[] = [nodeId];
+  for (const [k, v] of Object.entries(controls)) {
+    args.push(k, v);
+  }
+  client.send("/n_set", ...args);
+}
+
 let nextNodeId = 3000;
 function allocNodeId(): number {
   return nextNodeId++;
@@ -184,7 +193,7 @@ async function runGrainChordLerp() {
   await sendDef(filteredSawDef);
 
   const totalDurationSec = 10;
-  const noteIntervalMs = 20;
+  const noteIntervalMs = 80;
   const noteIntervalSec = noteIntervalMs / 1000;
   const totalNotes = Math.floor((totalDurationSec * 1000) / noteIntervalMs);
 
@@ -257,6 +266,29 @@ async function runGrainChordLerp() {
           filterRelease,
           filterEnvAmt,
         });
+
+        // Probability of triggering a pitch ramp (octave up or down over 1 second)
+        const rampProbability = 0.15; // 15% chance
+        const shouldRamp = ctx.random() < rampProbability;
+
+        if (shouldRamp) {
+          // Choose direction: up (+1 octave) or down (-1 octave)
+          const rampUp = ctx.random() < 0.5;
+          const targetFreq = rampUp ? freq * 2 : freq / 2;
+          const rampDuration = .4; // seconds
+          const rampSteps = 50; // number of updates
+          const stepDuration = rampDuration / rampSteps;
+
+          // Spawn a parallel branch to handle the ramp
+          ctx.branch(async (rampCtx) => {
+            for (let step = 0; step < rampSteps; step++) {
+              const t = step / (rampSteps - 1); // 0 to 1
+              const currentFreq = freq + (targetFreq - freq) * t;
+              setNode(nodeId, { freq: currentFreq });
+              await rampCtx.waitSec(stepDuration);
+            }
+          }, `ramp_${nodeId}`);
+        }
 
         // Wait for next note
         await ctx.waitSec(noteIntervalSec);

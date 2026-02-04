@@ -27,9 +27,9 @@ import {
   Out,
   EnvGen,
   RLPF,
+  Pan2,
 } from "../src/ugens/generated.ts";
 import { mul, add, midicps } from "../src/ugens/ops.ts";
-import { perc, env } from "../src/ugens/envelope.ts";
 import { launch, type DateTimeContext } from "../src/tools/offline_time_context.ts";
 
 // ---------------------------------------------------------------------------
@@ -82,10 +82,13 @@ const filteredSawDef = synthDef(
   "ts_filteredSaw",
   {
     freq: kr(440),
+    detune: kr(0), // detune in Hz (added to freq)
     amp: kr(0.3),
+    pan: kr(0),
     // Amplitude envelope params
     attack: kr(0.005),
     release: kr(0.1),
+    curve: kr(-4), // envelope curve: negative=plucky, positive=soft, 0=linear
     // Filter params
     filterFreq: kr(2000),
     filterRes: kr(0.3),
@@ -95,22 +98,32 @@ const filteredSawDef = synthDef(
     filterEnvAmt: kr(2000),
   },
   (p) => {
+    // Build envelope arrays manually to allow dynamic parameters
+    // Perc envelope format: [startLevel, numSegments, releaseNode, loopNode,
+    //                        level1, time1, curveType, curveValue, ...]
+    // curveType 5 = numeric curve, curveValue controls shape
+    const ampEnvArray = [0, 2, -99, -99, 1, p.attack, 5, p.curve, 0, p.release, 5, p.curve];
+    const filterEnvArray = [0, 2, -99, -99, 1, p.filterAttack, 5, p.curve, 0, p.filterRelease, 5, p.curve];
+
     // Amplitude envelope - percussive, self-freeing
     const ampEnv = EnvGen.kr({
-      envelope: perc({ attack: 0.005, release: 0.1 }),
+      envelope: ampEnvArray as number[],
       doneAction: 2,
     });
 
     // Filter envelope - separate percussive shape for filter cutoff modulation
     const filterEnv = EnvGen.kr({
-      envelope: perc({ attack: 0.005, release: 0.15 }),
+      envelope: filterEnvArray as number[],
     });
 
     // Calculate filter frequency: base + envelope * amount
     const modulatedFilterFreq = add(p.filterFreq, mul(filterEnv, p.filterEnvAmt));
 
+    // Apply detune to frequency
+    const detunedFreq = add(p.freq, p.detune);
+
     // Sawtooth oscillator
-    const osc = Saw.ar({ freq: p.freq });
+    const osc = Saw.ar({ freq: detunedFreq });
 
     // Resonant low pass filter
     const filtered = RLPF.ar({
@@ -119,8 +132,10 @@ const filteredSawDef = synthDef(
       rq: p.filterRes,
     });
 
-    // Apply amplitude envelope and output
-    Out.ar({ bus: 0, channelsArray: mul(mul(filtered, ampEnv), p.amp) });
+    // Apply amplitude envelope and pan to stereo
+    const sig = mul(mul(filtered, ampEnv), p.amp);
+    const panned = Pan2.ar({ in: sig, pos: p.pan });
+    Out.ar({ bus: 0, channelsArray: panned });
   },
 );
 
@@ -140,6 +155,25 @@ function midiToFreq(midi: number): number {
 }
 
 // ---------------------------------------------------------------------------
+// Sigmoid helper for smooth chord transitions
+// ---------------------------------------------------------------------------
+
+/**
+ * Logistic sigmoid for probability shaping.
+ * @param x - input value (0 to 1 for progress)
+ * @param steepness - controls transition sharpness:
+ *   - 0: flat at 0.5 (no transition)
+ *   - 1-5: gradual transition
+ *   - 10: moderate transition
+ *   - 20+: sharp/abrupt transition
+ * @param center - where the transition happens (default 0.5 = middle)
+ * @returns value from ~1 (at x=0) to ~0 (at x=1)
+ */
+function sigmoidProb(x: number, steepness: number, center = 0.5): number {
+  return 1 / (1 + Math.exp(steepness * (x - center)));
+}
+
+// ---------------------------------------------------------------------------
 // Main grain loop test
 // ---------------------------------------------------------------------------
 
@@ -150,13 +184,18 @@ async function runGrainChordLerp() {
   await sendDef(filteredSawDef);
 
   const totalDurationSec = 10;
-  const noteIntervalMs = 10;
+  const noteIntervalMs = 20;
   const noteIntervalSec = noteIntervalMs / 1000;
   const totalNotes = Math.floor((totalDurationSec * 1000) / noteIntervalMs);
+
+  // Transition sharpness: higher = sharper transition between chords
+  // Try values: 5 (gradual), 10 (moderate), 20 (sharp), 50 (very abrupt)
+  const transitionSteepness = 10;
 
   console.log(`Playing ${totalNotes} notes over ${totalDurationSec} seconds`);
   console.log("Chord A: [60, 64, 67] (C major)");
   console.log("Chord B: [63, 66, 69] (Eb minor)");
+  console.log(`Transition steepness: ${transitionSteepness}`);
   console.log("Probability shifts from Chord A to Chord B over time\n");
 
   // Track notes played from each chord
@@ -166,9 +205,10 @@ async function runGrainChordLerp() {
   await launch(
     async (ctx: DateTimeContext) => {
       for (let i = 0; i < totalNotes; i++) {
-        // Calculate probability of choosing chord A (starts at 1, ends at 0)
+        // Calculate probability of choosing chord A using sigmoid
+        // Starts near 1, transitions to near 0, with tunable sharpness
         const progress = i / (totalNotes - 1);
-        const probChordA = 1 - progress;
+        const probChordA = sigmoidProb(progress, transitionSteepness);
 
         // Pick chord based on probability
         const useChordA = ctx.random() < probChordA;
@@ -183,23 +223,38 @@ async function runGrainChordLerp() {
         // Pick random note from selected chord
         const noteIndex = Math.floor(ctx.random() * chord.length);
         const midiNote = chord[noteIndex];
-        const freq = midiToFreq(midiNote);
+
+        const detune = (ctx.random() * 2 - 1) * 0.1; // -10 to 10 cents
+
+        const freq = midiToFreq(midiNote + detune);
 
         // Random synth parameters
         const amp = 0.15 + ctx.random() * 0.15; // 0.15 - 0.30
-        const release = 0.05 + ctx.random() * 0.15; // 0.05 - 0.20
+        
+        const pan = ctx.random() * 2 - 1; // -1 to 1 (left to right)
+        const attack = 0.05 + ctx.random() * 0.2; // 0.05 - 0.25 sec
+        const release = 0.05 + ctx.random() * 4.25; // 0.05 - 1.30 sec (note duration)
+        const curve = 1; // -8 to -2 (plucky to less plucky)
         const filterFreq = 500 + ctx.random() * 2000; // 500 - 2500 Hz
         const filterRes = 0.1 + ctx.random() * 0.4; // 0.1 - 0.5 (rq)
+        const filterAttack = 0.001 + ctx.random() * 0.1; // 0.001 - 0.101 sec
+        const filterRelease = 0.03 + ctx.random() * 0.75; // 0.03 - 0.78 sec
         const filterEnvAmt = 1000 + ctx.random() * 3000; // 1000 - 4000 Hz
 
         // Play the note
         const nodeId = allocNodeId();
         newSynth("ts_filteredSaw", nodeId, {
           freq,
+          detune,
           amp,
+          pan,
+          attack,
           release,
+          curve,
           filterFreq,
           filterRes,
+          filterAttack,
+          filterRelease,
           filterEnvAmt,
         });
 

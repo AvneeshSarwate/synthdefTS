@@ -28,6 +28,7 @@ import {
   EnvGen,
   RLPF,
   Pan2,
+  SinOsc,
 } from "../src/ugens/generated.ts";
 import { mul, add, midicps } from "../src/ugens/ops.ts";
 import { launch, type DateTimeContext } from "../src/tools/offline_time_context.ts";
@@ -90,10 +91,13 @@ function allocNodeId(): number {
 const filteredSawDef = synthDef(
   "ts_filteredSaw",
   {
-    freq: kr(440),
-    detune: kr(0), // detune in Hz (added to freq)
+    note: kr(60), // MIDI note number
+    detune: kr(0), // static detune in semitones
     amp: kr(0.3),
     pan: kr(0),
+    // LFO params for vibrato/detune modulation
+    lfoSpeed: kr(0), // LFO frequency in Hz (0 = no modulation)
+    lfoDepth: kr(0), // LFO depth in semitones
     // Amplitude envelope params
     attack: kr(0.005),
     release: kr(0.1),
@@ -128,11 +132,18 @@ const filteredSawDef = synthDef(
     // Calculate filter frequency: base + envelope * amount
     const modulatedFilterFreq = add(p.filterFreq, mul(filterEnv, p.filterEnvAmt));
 
-    // Apply detune to frequency
-    const detunedFreq = add(p.freq, p.detune);
+    // LFO for pitch modulation (in semitones)
+    const lfo = SinOsc.kr({ freq: p.lfoSpeed }); // outputs -1 to 1
+    const lfoModulation = mul(lfo, p.lfoDepth); // scale to semitones
+
+    // Calculate final MIDI note: base + static detune + LFO modulation
+    const modulatedNote = add(add(p.note, p.detune), lfoModulation);
+
+    // Convert MIDI note to frequency
+    const freq = midicps(modulatedNote);
 
     // Sawtooth oscillator
-    const osc = Saw.ar({ freq: detunedFreq });
+    const osc = Saw.ar({ freq });
 
     // Resonant low pass filter
     const filtered = RLPF.ar({
@@ -182,6 +193,27 @@ function sigmoidProb(x: number, steepness: number, center = 0.5): number {
   return 1 / (1 + Math.exp(steepness * (x - center)));
 }
 
+/**
+ * Sigmoid-shaped interpolation for slides/glides.
+ * Maps 0→0 and 1→1 with adjustable curve steepness.
+ * @param t - input value (0 to 1)
+ * @param steepness - controls curve sharpness:
+ *   - 0: linear (no curve)
+ *   - 5: gentle S-curve
+ *   - 10: moderate S-curve
+ *   - 20+: sharp S-curve (fast in middle, slow at ends)
+ * @returns value from 0 to 1 with S-curve shaping
+ */
+function sigmoidSlide(t: number, steepness: number): number {
+  if (steepness === 0) return t; // linear fallback
+  // Use inverted sigmoidProb: goes from ~0 at t=0 to ~1 at t=1
+  const raw = 1 - sigmoidProb(t, steepness);
+  // Normalize to ensure exact 0→0 and 1→1 mapping
+  const atZero = 1 - sigmoidProb(0, steepness);
+  const atOne = 1 - sigmoidProb(1, steepness);
+  return (raw - atZero) / (atOne - atZero);
+}
+
 // ---------------------------------------------------------------------------
 // Main grain loop test
 // ---------------------------------------------------------------------------
@@ -229,34 +261,37 @@ async function runGrainChordLerp() {
           chordBCount++;
         }
 
-        // Pick random note from selected chord
+        // Pick random note from selected chord (MIDI note number)
         const noteIndex = Math.floor(ctx.random() * chord.length);
-        const midiNote = chord[noteIndex];
-
-        const detune = (ctx.random() * 2 - 1) * 0.1; // -10 to 10 cents
-
-        const freq = midiToFreq(midiNote + detune);
+        const note = chord[noteIndex];
 
         // Random synth parameters
+        const detune = (ctx.random() * 2 - 1) * 0.1; // -0.1 to +0.1 semitones
         const amp = 0.15 + ctx.random() * 0.15; // 0.15 - 0.30
-        
         const pan = ctx.random() * 2 - 1; // -1 to 1 (left to right)
+
+        // LFO parameters for vibrato
+        const lfoSpeed = ctx.random() * 8; // 0 - 8 Hz
+        const lfoDepth = ctx.random() * 0.01; // 0 - 0.01 semitones
+
         const attack = 0.05 + ctx.random() * 0.2; // 0.05 - 0.25 sec
-        const release = 0.05 + ctx.random() * 4.25; // 0.05 - 1.30 sec (note duration)
-        const curve = 1; // -8 to -2 (plucky to less plucky)
+        const release = 0.05 + ctx.random() * 4.25; // 0.05 - 4.30 sec (note duration)
+        const curve = 1; // envelope curve
         const filterFreq = 500 + ctx.random() * 2000; // 500 - 2500 Hz
-        const filterRes = 0.1 + ctx.random() * 0.4; // 0.1 - 0.5 (rq)
-        const filterAttack = 0.001 + ctx.random() * 0.1; // 0.001 - 0.101 sec
+        const filterRes = 0.1 + ctx.random() * 0.8; // 0.1 - 0.9 (rq)
+        const filterAttack = 0.05 + ctx.random() * 0.8; // 0.05 - 0.85 sec
         const filterRelease = 0.03 + ctx.random() * 0.75; // 0.03 - 0.78 sec
         const filterEnvAmt = 1000 + ctx.random() * 3000; // 1000 - 4000 Hz
 
         // Play the note
         const nodeId = allocNodeId();
         newSynth("ts_filteredSaw", nodeId, {
-          freq,
+          note,
           detune,
           amp,
           pan,
+          lfoSpeed,
+          lfoDepth,
           attack,
           release,
           curve,
@@ -272,19 +307,24 @@ async function runGrainChordLerp() {
         const shouldRamp = ctx.random() < rampProbability;
 
         if (shouldRamp) {
-          // Choose direction: up (+1 octave) or down (-1 octave)
+          // Choose direction: up (+12 semitones) or down (-12 semitones)
           const rampUp = ctx.random() < 0.5;
-          const targetFreq = rampUp ? freq * 2 : freq / 2;
-          const rampDuration = .4; // seconds
+          const targetNote = rampUp ? note + 12 : note - 12;
+          const rampDuration = 0.5 + ctx.random(); // seconds
           const rampSteps = 50; // number of updates
           const stepDuration = rampDuration / rampSteps;
+
+          // Slide steepness: 0 = linear, 5 = gentle S-curve, 15+ = sharp S-curve
+          const slideSteepness = ctx.random() * 20; // 0 - 20
 
           // Spawn a parallel branch to handle the ramp
           ctx.branch(async (rampCtx) => {
             for (let step = 0; step < rampSteps; step++) {
               const t = step / (rampSteps - 1); // 0 to 1
-              const currentFreq = freq + (targetFreq - freq) * t;
-              setNode(nodeId, { freq: currentFreq });
+              // Apply sigmoid shaping to the interpolation
+              const shaped = sigmoidSlide(t, slideSteepness);
+              const currentNote = note + (targetNote - note) * shaped;
+              setNode(nodeId, { note: currentNote });
               await rampCtx.waitSec(stepDuration);
             }
           }, `ramp_${nodeId}`);

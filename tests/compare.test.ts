@@ -47,41 +47,41 @@ function assertBytesEqual(actual: Uint8Array, expected: Uint8Array, label: strin
 
 Deno.test("binary matches SuperCollider fixtures", async () => {
   const def1 = synthDef("test1", () => {
-    const sig = SinOsc.ar({ freq: 440 }) as any;
+    const sig = SinOsc.ar({ freq: 440 });
     Out.ar({ bus: 0, channelsArray: mul(sig, 0.5) });
   });
 
   const def2 = synthDef("test2", { freq: kr(440), amp: kr(0.5) }, (p) => {
-    const sig = SinOsc.ar({ freq: p.freq as any }) as any;
-    Out.ar({ bus: 0, channelsArray: mul(sig, p.amp as any) });
+    const sig = SinOsc.ar({ freq: p.freq });
+    Out.ar({ bus: 0, channelsArray: mul(sig, p.amp) });
   });
 
   const def3 = synthDef("test3", { freq: kr(440) }, (p) => {
-    const sig = SinOsc.ar({ freq: p.freq as any }) as any;
-    const pan = Pan2.ar({ in: sig as any, pos: 0 });
-    Out.ar({ bus: 0, channelsArray: pan as any });
+    const sig = SinOsc.ar({ freq: p.freq });
+    const pan = Pan2.ar({ in: sig, pos: 0 });
+    Out.ar({ bus: 0, channelsArray: pan });
   });
 
   const def4 = synthDef("test4", { gate: kr(1) }, (p) => {
-    const env = EnvGen.kr({ envelope: asr(), gate: p.gate as any, doneAction: 2 });
-    const sig = SinOsc.ar({ freq: 440 }) as any;
-    Out.ar({ bus: 0, channelsArray: mul(sig, env as any) });
+    const env = EnvGen.kr({ envelope: asr(), gate: p.gate, doneAction: 2 });
+    const sig = SinOsc.ar({ freq: 440 });
+    Out.ar({ bus: 0, channelsArray: mul(sig, env) });
   });
 
   const def5 = synthDef("test5", () => {
-    const noise = WhiteNoise.ar({ mul: 0.2 }) as any;
+    const noise = WhiteNoise.ar({ mul: 0.2 });
     const filtered = LPF.ar({ in: noise, freq: 1000 });
-    Out.ar({ bus: 0, channelsArray: filtered as any });
+    Out.ar({ bus: 0, channelsArray: filtered });
   });
 
   const def6 = synthDef("test6", { freq: kr(220) }, (p) => {
-    const pulse = LFPulse.ar({ freq: p.freq as any, iphase: 0, width: 0.5 }) as any;
+    const pulse = LFPulse.ar({ freq: p.freq, iphase: 0, width: 0.5 });
     Out.ar({ bus: 0, channelsArray: pulse });
   });
 
   const def7 = synthDef("test7", () => {
     const input = In.ar({ bus: 0, numChannels: 2 });
-    Out.ar({ bus: 0, channelsArray: input as any });
+    Out.ar({ bus: 0, channelsArray: input });
   });
 
   const def8 = synthDef("test8", () => {
@@ -91,37 +91,37 @@ Deno.test("binary matches SuperCollider fixtures", async () => {
 
   const def9 = synthDef("test9", () => {
     const sig = LocalIn.ar({ numChannels: 2, default: [0.1, 0.2] });
-    Out.ar({ bus: 0, channelsArray: sig as any });
+    Out.ar({ bus: 0, channelsArray: sig });
   });
 
   const def10 = synthDef("test10", () => {
     const sig = [SinOsc.ar({ freq: 440 }), SinOsc.ar({ freq: 880 })];
-    SendPeakRMS.kr({ sig: sig as any, replyRate: 10, peakLag: 2, cmdName: "/peak", replyID: 5 });
+    SendPeakRMS.kr({ sig, replyRate: 10, peakLag: 2, cmdName: "/peak", replyID: 5 });
   });
 
   const def11 = synthDef("test11", () => {
     const buf = LocalBuf.new({ numFrames: 1024, numChannels: 1 });
     const phase = DC.ar({ in: 0 });
-    const sig = BufRd.ar({ numChannels: 1, bufnum: buf as any, phase: phase as any });
-    Out.ar({ bus: 0, channelsArray: sig as any });
+    const sig = BufRd.ar({ numChannels: 1, bufnum: buf, phase });
+    Out.ar({ bus: 0, channelsArray: sig });
   });
 
   const def12 = synthDef("test12", () => {
     const env = envForInterpolation({ levels: [0, 1, 0], times: [0.01, 0.2], curves: [-4] });
     const sig = IEnvGen.kr({ envelope: env, index: 0.1, mul: 0.5, add: 0.25 });
-    Out.ar({ bus: 0, channelsArray: DC.ar({ in: sig as any }) });
+    Out.ar({ bus: 0, channelsArray: DC.ar({ in: sig }) });
   });
 
   const def13 = synthDef("test13", () => {
     const trig = Impulse.kr({ freq: 2 });
     const seq = Dwrand.new({ list: [1, 2, 3], weights: [0.2, 0.8], repeats: 4 });
-    const sig = Demand.kr({ trig, reset: 0, demandUGens: seq as any });
-    Out.kr({ bus: 0, channelsArray: sig as any });
+    const sig = Demand.kr({ trig, reset: 0, demandUGens: seq });
+    Out.kr({ bus: 0, channelsArray: sig });
   });
 
   const def14 = synthDef("test14", () => {
     const trig = Impulse.kr({ freq: 1 });
-    const sig = SinOsc.kr({ freq: 2 }) as any;
+    const sig = SinOsc.kr({ freq: 2 });
     Poll.kr({ trig, in: sig, label: "poll", trigid: 3 });
     Out.ar({ bus: 0, channelsArray: DC.ar({ in: sig }) });
   });
@@ -129,9 +129,9 @@ Deno.test("binary matches SuperCollider fixtures", async () => {
   const def15 = synthDef("test15", () => {
     const trig = Impulse.kr({ freq: 1 });
     const seq = Dseq.new({ list: [1, 2, 3], repeats: 2 });
-    const polled = Dpoll.new({ in: seq as any, label: "dpoll", run: 1, trigid: 2 });
-    const sig = Demand.kr({ trig, reset: 0, demandUGens: polled as any });
-    Out.kr({ bus: 0, channelsArray: sig as any });
+    const polled = Dpoll.new({ in: seq, label: "dpoll", run: 1, trigid: 2 });
+    const sig = Demand.kr({ trig, reset: 0, demandUGens: polled });
+    Out.kr({ bus: 0, channelsArray: sig });
   });
 
   const fixtures = await Promise.all([

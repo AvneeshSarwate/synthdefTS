@@ -72,9 +72,38 @@ function paramType(param: ParamSpec, isOutputCount: boolean, isOutputUgen: boole
   return "UGenInput | UGenInput[]";
 }
 
+// For scalar overload - all expandable params are UGenInput (not array)
+function paramTypeScalar(param: ParamSpec, isOutputCount: boolean, isOutputUgen: boolean, isAppendParam: boolean): string {
+  if (isOutputCount) return "number";
+  if (isOutputUgen && !isAppendParam) return "UGenInput";
+  return "UGenInput";
+}
+
 function paramDefault(param: ParamSpec): string | null {
   if (param.defaultValue === undefined) return null;
   return String(param.defaultValue);
+}
+
+function buildScalarParamTypeLiteral(
+  params: ParamSpec[],
+  numOutputsParam: string | undefined,
+  isOutputUgen: boolean,
+  appendParams: string[]
+): string {
+  const typeParts: string[] = [];
+  const appendParamSet = new Set(appendParams);
+
+  params.forEach((param) => {
+    const isOutputCount = numOutputsParam === param.name;
+    const isAppendParam = appendParamSet.has(param.name);
+    const propName = formatPropName(param.name);
+    const optional = !param.required;
+    const isMulAdd = param.name === "mul" || param.name === "add";
+    const type = isMulAdd ? "UGenInput" : paramTypeScalar(param, isOutputCount, isOutputUgen, isAppendParam);
+    typeParts.push(`${propName}${optional ? "?" : ""}: ${type}`);
+  });
+
+  return `{ ${typeParts.join("; ")} }`;
 }
 
 function buildParamList(
@@ -182,13 +211,50 @@ function detectNumOutputs(spec: ResolvedSpec): { count: number | "variable"; par
   return { count: 1 };
 }
 
+// Get the scalar return type based on output count
+function getScalarReturnType(outputCount: number | "variable"): string {
+  if (outputCount === 0) return "void";
+  if (outputCount === 1) return "UGenOutput";
+  if (outputCount === 2) return "Stereo";
+  if (outputCount === 3) return "Trio";
+  if (outputCount === 4) return "Quad";
+  // Variable or more than 4 outputs
+  return "UGenOutput[]";
+}
+
+// Get the array return type based on output count
+function getArrayReturnType(outputCount: number | "variable"): string {
+  if (outputCount === 0) return "void";
+  if (outputCount === 1) return "UGenOutput[]";
+  if (outputCount === 2) return "Stereo[]";
+  if (outputCount === 3) return "Trio[]";
+  if (outputCount === 4) return "Quad[]";
+  // Variable or more than 4 outputs
+  return "UGenOutput[][]";
+}
+
+// Get the union return type (for implementation)
+function getUnionReturnType(outputCount: number | "variable", hasExpandableParams: boolean): string {
+  if (outputCount === 0) return "void";
+  const scalar = getScalarReturnType(outputCount);
+  if (!hasExpandableParams) return scalar;
+  const array = getArrayReturnType(outputCount);
+  return `${scalar} | ${array}`;
+}
+
+interface MethodGenResult {
+  interfaceSignatures: string[];  // The overload signatures for the interface
+  implementation: string;         // The implementation method body
+  needsInterface: boolean;        // Whether this method needs interface overloads
+}
+
 function buildMethod(
   name: string,
   method: MethodSpec,
   spec: ResolvedSpec,
   isDemand: boolean,
   isOutputClass: boolean
-): string {
+): MethodGenResult {
   const outputs = detectNumOutputs(spec);
   const outputCountParam = outputs.param;
   const isZeroOutput = outputs.count === 0;
@@ -202,11 +268,12 @@ function buildMethod(
   const hasRequiredParams = method.params.some(
     (param) => param.required && param.name !== "mul" && param.name !== "add"
   );
-  const returnType = outputs.count === 0
-    ? "void"
-    : outputs.count === 1
-    ? "UGenOutput | UGenOutput[]"
-    : "UGenOutput[] | UGenOutput[][]";
+
+  const hasExpandableParams = params.expandIndices.length > 0;
+
+  const scalarReturnType = getScalarReturnType(outputs.count);
+  const arrayReturnType = getArrayReturnType(outputs.count);
+  const unionReturnType = getUnionReturnType(outputs.count, hasExpandableParams);
 
   const rate = rateToEnum(method.rate, isDemand);
   const inputParts: string[] = [...params.inputArgs];
@@ -230,46 +297,72 @@ function buildMethod(
 
   const outputCountExpr = outputs.count === "variable" ? params.outputCountVar ?? "1" : String(outputs.count);
 
-  const paramsSignature = hasRequiredParams
+  // Build scalar params type (all UGenInput, no arrays)
+  const scalarTypeLiteral = buildScalarParamTypeLiteral(method.params, outputCountParam, isOutputUgen, appendParams);
+
+  // Implementation signature uses the full type literal
+  const implParamsSignature = hasRequiredParams
     ? `params: ${params.typeLiteral}`
     : `params: ${params.typeLiteral} = {}`;
 
+  // Build interface signatures if we have expandable params and non-void return
+  const interfaceSignatures: string[] = [];
+  const needsInterface = hasExpandableParams && !isZeroOutput;
+
+  // Format the method name for interface - quote if reserved word
+  const interfaceMethodName = formatPropName(method.rate);
+
+  if (needsInterface) {
+    // Scalar overload - params with = {} default if no required params
+    const scalarParamsType = hasRequiredParams ? scalarTypeLiteral : `${scalarTypeLiteral}`;
+    interfaceSignatures.push(`  ${interfaceMethodName}(params${hasRequiredParams ? "" : "?"}: ${scalarParamsType}): ${scalarReturnType};`);
+    // Array overload
+    interfaceSignatures.push(`  ${interfaceMethodName}(params: ${params.typeLiteral}): ${arrayReturnType};`);
+  }
+
+  let implementation: string;
+
   if (isZeroOutput && isOutputUgen) {
-    return `  ${method.rate}(${paramsSignature}): void {\n` +
+    implementation =
+      `  ${method.rate}(${implParamsSignature}): void {\n` +
       `    const ${params.destructure} = params;\n` +
       (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
       inputsDecl +
       `    newUGen("${name}", ${rate}, ${inputsValue} as UGenInput[], 0);\n` +
       `  }`;
-  }
-  if (isZeroOutput) {
-    return `  ${method.rate}(${paramsSignature}): void {\n` +
+  } else if (isZeroOutput) {
+    implementation =
+      `  ${method.rate}(${implParamsSignature}): void {\n` +
       `    const ${params.destructure} = params;\n` +
       (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
       inputsDecl +
       `    multiNew("${name}", ${rate}, ${inputsValue}, 0, ${expandIndices});\n` +
       `  }`;
+  } else {
+    const applyMulAdd = params.mulLocal || params.addLocal;
+    if (applyMulAdd) {
+      const mulArg = params.mulLocal ?? "undefined";
+      const addArg = params.addLocal ?? "undefined";
+      implementation =
+        `  ${method.rate}(${implParamsSignature}): ${unionReturnType} {\n` +
+        `    const ${params.destructure} = params;\n` +
+        (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
+        inputsDecl +
+        `    const ugenOutput = multiNew("${name}", ${rate}, ${inputsValue}, ${outputCountExpr}, ${expandIndices}) as ${unionReturnType};\n` +
+        `    return applyMulAdd(ugenOutput as any, ${mulArg}, ${addArg}) as ${unionReturnType};\n` +
+        `  }`;
+    } else {
+      implementation =
+        `  ${method.rate}(${implParamsSignature}): ${unionReturnType} {\n` +
+        `    const ${params.destructure} = params;\n` +
+        (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
+        inputsDecl +
+        `    return multiNew("${name}", ${rate}, ${inputsValue}, ${outputCountExpr}, ${expandIndices}) as ${unionReturnType};\n` +
+        `  }`;
+    }
   }
 
-  const applyMulAdd = params.mulLocal || params.addLocal;
-  if (applyMulAdd) {
-    const mulArg = params.mulLocal ?? "undefined";
-    const addArg = params.addLocal ?? "undefined";
-    return `  ${method.rate}(${paramsSignature}): ${returnType} {\n` +
-      `    const ${params.destructure} = params;\n` +
-      (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
-      inputsDecl +
-      `    const ugenOutput = multiNew("${name}", ${rate}, ${inputsValue}, ${outputCountExpr}, ${expandIndices}) as ${returnType};\n` +
-      `    return applyMulAdd(ugenOutput as any, ${mulArg}, ${addArg}) as ${returnType};\n` +
-      `  }`;
-  }
-
-  return `  ${method.rate}(${paramsSignature}): ${returnType} {\n` +
-    `    const ${params.destructure} = params;\n` +
-    (preludeLines.length > 0 ? preludeLines.map((line) => `    ${line}\n`).join("") : "") +
-    inputsDecl +
-    `    return multiNew("${name}", ${rate}, ${inputsValue}, ${outputCountExpr}, ${expandIndices}) as ${returnType};\n` +
-    `  }`;
+  return { interfaceSignatures, implementation, needsInterface };
 }
 
 function isDemandUGen(spec: ResolvedSpec, resolved: Record<string, ResolvedSpec>): boolean {
@@ -508,7 +601,7 @@ export function generateModule(parsed: ParsedSpec, overrides: Overrides = {}): s
     .sort((a, b) => a.name.localeCompare(b.name));
 
   let output = "";
-  output += `import { Rate, UGenInput, UGenOutput } from \"../graph/types.ts\";\n`;
+  output += `import { Rate, UGenInput, UGenOutput, Stereo, Trio, Quad } from \"../graph/types.ts\";\n`;
   output += `import { multiNew, newUGen } from \"./core.ts\";\n`;
   output += `import { applyMulAdd } from \"./ops.ts\";\n`;
   output += `import { getActiveBuilder } from \"../graph/context.ts\";\n\n`;
@@ -531,17 +624,44 @@ export function generateModule(parsed: ParsedSpec, overrides: Overrides = {}): s
       continue;
     }
 
-    output += `export const ${spec.name} = {\n`;
-
     const isDemand = demandSet.has(spec.name);
     const isOutputClass = outputClassSet.has(spec.name);
+
+    // Collect all method results
+    const methodResults: { rate: string; result: MethodGenResult }[] = [];
     for (const rate of Object.keys(spec.methods) as MethodSpec["rate"][]) {
       const method = spec.methods[rate];
       if (!method) continue;
-      output += buildMethod(spec.name, method, spec, isDemand, isOutputClass) + ",\n";
+      methodResults.push({ rate, result: buildMethod(spec.name, method, spec, isDemand, isOutputClass) });
     }
 
-    output += `};\n\n`;
+    // Check if any method needs interface overloads
+    const needsInterface = methodResults.some((m) => m.result.needsInterface);
+
+    if (needsInterface) {
+      // Emit interface with overloads
+      output += `interface ${spec.name}Type {\n`;
+      for (const { result } of methodResults) {
+        for (const sig of result.interfaceSignatures) {
+          output += sig + "\n";
+        }
+      }
+      output += `}\n\n`;
+
+      // Emit implementation cast to interface using 'as unknown as' to bypass strict overload checking
+      output += `export const ${spec.name} = {\n`;
+      for (const { result } of methodResults) {
+        output += result.implementation + ",\n";
+      }
+      output += `} as unknown as ${spec.name}Type;\n\n`;
+    } else {
+      // No overloads needed, emit simple object
+      output += `export const ${spec.name} = {\n`;
+      for (const { result } of methodResults) {
+        output += result.implementation + ",\n";
+      }
+      output += `};\n\n`;
+    }
   }
 
   return output;

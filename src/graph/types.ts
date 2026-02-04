@@ -20,6 +20,11 @@ export interface UGenOutput {
 
 export type UGenInput = UGenOutput | number;
 
+// Tuple types for multi-output UGens
+export type Stereo = [UGenOutput, UGenOutput];
+export type Trio = [UGenOutput, UGenOutput, UGenOutput];
+export type Quad = [UGenOutput, UGenOutput, UGenOutput, UGenOutput];
+
 export interface UGenNode {
   id: number;
   name: string;
@@ -49,3 +54,10 @@ export type ParamDefs = Record<string, ParamDef>;
 export type ParamValue = UGenOutput | UGenOutput[];
 
 export type ParamProxy = Record<string, ParamValue>;
+
+// Type inference helpers for synthDef generics
+export type InferParamType<T extends ParamDef> = T['defaultValue'] extends number[] ? UGenOutput[] : UGenOutput;
+
+export type ParamProxyFor<P extends ParamDefs> = {
+  [K in keyof P]: InferParamType<P[K]>;
+};

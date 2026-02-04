@@ -38,7 +38,6 @@ import {
 } from "../src/ugens/generated.ts";
 import { mul, add, midicps } from "../src/ugens/ops.ts";
 import { adsr, perc, asr, env } from "../src/ugens/envelope.ts";
-import type { UGenInput, UGenOutput } from "../src/graph/types.ts";
 
 // ---------------------------------------------------------------------------
 // OSC helpers
@@ -110,8 +109,8 @@ const simpleSineDef = synthDef(
       envelope: perc({ attack: 0.01, release: 0.5 }),
       doneAction: 2,
     });
-    const sig = SinOsc.ar({ freq: p.freq as UGenInput }) as UGenOutput;
-    Out.ar({ bus: 0, channelsArray: mul(mul(sig, env as UGenInput), p.amp as UGenInput) });
+    const sig = SinOsc.ar({ freq: p.freq });
+    Out.ar({ bus: 0, channelsArray: mul(mul(sig, env), p.amp) });
   },
 );
 
@@ -122,13 +121,13 @@ const padDef = synthDef(
   (p) => {
     const env = EnvGen.kr({
       envelope: adsr({ attack: 0.3, decay: 0.2, sustain: 0.7, release: 1.0 }),
-      gate: p.gate as UGenInput,
+      gate: p.gate,
       doneAction: 2,
     });
-    const sig = Saw.ar({ freq: p.freq as UGenInput, mul: p.amp as UGenInput }) as UGenOutput;
-    const filt = LPF.ar({ in: sig as UGenInput, freq: 1500 }) as UGenOutput;
-    const wet = FreeVerb.ar({ in: filt as UGenInput, mix: 0.35, room: 0.6 }) as UGenOutput;
-    Out.ar({ bus: 0, channelsArray: mul(wet, env as UGenInput) });
+    const sig = Saw.ar({ freq: p.freq, mul: p.amp });
+    const filt = LPF.ar({ in: sig, freq: 1500 });
+    const wet = FreeVerb.ar({ in: filt, mix: 0.35, room: 0.6 });
+    Out.ar({ bus: 0, channelsArray: mul(wet, env) });
   },
 );
 
@@ -141,13 +140,13 @@ const noiseDef = synthDef(
       envelope: perc({ attack: 0.005, release: 0.3 }),
       doneAction: 2,
     });
-    const noise = WhiteNoise.ar({}) as UGenOutput;
+    const noise = WhiteNoise.ar({});
     const filt = RLPF.ar({
-      in: noise as UGenInput,
-      freq: p.freq as UGenInput,
+      in: noise,
+      freq: p.freq,
       rq: 0.1,
-    }) as UGenOutput;
-    Out.ar({ bus: 0, channelsArray: mul(mul(filt, env as UGenInput), p.amp as UGenInput) });
+    });
+    Out.ar({ bus: 0, channelsArray: mul(mul(filt, env), p.amp) });
   },
 );
 
@@ -158,15 +157,16 @@ const pannedSineDef = synthDef(
   (p) => {
     const env = EnvGen.kr({
       envelope: asr({ attack: 0.01, release: 0.3 }),
-      gate: p.gate as UGenInput,
+      gate: p.gate,
       doneAction: 2,
     });
-    const sig = SinOsc.ar({ freq: p.freq as UGenInput }) as UGenOutput;
+    const sig = SinOsc.ar({ freq: p.freq });
+    // Pan2 returns stereo pair
     const panned = Pan2.ar({
-      in: mul(sig, mul(p.amp as UGenInput, env as UGenInput)) as UGenInput,
-      pos: p.pan as UGenInput,
-    }) as UGenOutput[];
-    Out.ar({ bus: 0, channelsArray: panned as UGenInput[] });
+      in: mul(sig, mul(p.amp, env)),
+      pos: p.pan,
+    });
+    Out.ar({ bus: 0, channelsArray: panned });
   },
 );
 
@@ -175,18 +175,18 @@ const combTextureDef = synthDef(
   "ts_combTexture",
   { amp: kr(0.2) },
   (p) => {
-    const envLine = Line.kr({ start: 1, end: 0, dur: 4, doneAction: 2 }) as UGenOutput;
-    const dust = Dust.ar({ density: 3 }) as UGenOutput;
-    const noise = mul(dust, 0.5) as UGenOutput;
+    const envLine = Line.kr({ start: 1, end: 0, dur: 4, doneAction: 2 });
+    const dust = Dust.ar({ density: 3 });
+    const noise = mul(dust, 0.5);
     const comb = CombC.ar({
-      in: noise as UGenInput,
+      in: noise,
       maxdelaytime: 0.2,
       delaytime: 0.1,
       decaytime: 3.0,
-    }) as UGenOutput;
+    });
     Out.ar({
       bus: 0,
-      channelsArray: mul(mul(comb, envLine as UGenInput), p.amp as UGenInput),
+      channelsArray: mul(mul(comb, envLine), p.amp),
     });
   },
 );

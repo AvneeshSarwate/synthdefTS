@@ -3,6 +3,7 @@ import {
   ParamDef,
   ParamDefs,
   ParamProxy,
+  ParamProxyFor,
   ParamValue,
   ParameterRate,
   Rate,
@@ -180,39 +181,48 @@ class SynthDefBuilder implements BuilderContext {
   }
 }
 
+export function ir(defaultValue: number): ParamDef & { defaultValue: number };
+export function ir(defaultValue: number[]): ParamDef & { defaultValue: number[] };
 export function ir(defaultValue: number | number[]): ParamDef {
   return { rate: ParameterRate.Scalar, defaultValue };
 }
 
+export function kr(defaultValue: number, lag?: number | number[]): ParamDef & { defaultValue: number };
+export function kr(defaultValue: number[], lag?: number | number[]): ParamDef & { defaultValue: number[] };
 export function kr(defaultValue: number | number[], lag?: number | number[]): ParamDef {
   return { rate: ParameterRate.Control, defaultValue, lag };
 }
 
+export function tr(defaultValue: number): ParamDef & { defaultValue: number };
+export function tr(defaultValue: number[]): ParamDef & { defaultValue: number[] };
 export function tr(defaultValue: number | number[]): ParamDef {
   return { rate: ParameterRate.Trigger, defaultValue };
 }
 
+export function ar(defaultValue: number): ParamDef & { defaultValue: number };
+export function ar(defaultValue: number[]): ParamDef & { defaultValue: number[] };
 export function ar(defaultValue: number | number[]): ParamDef {
   return { rate: ParameterRate.Audio, defaultValue };
 }
 
 export function synthDef(
   name: string,
-  graphFn: (params: ParamProxy) => void
+  graphFn: () => void
 ): SynthDef;
-export function synthDef(
+export function synthDef<P extends ParamDefs>(
   name: string,
-  paramDefs: ParamDefs,
-  graphFn: (params: ParamProxy) => void
+  paramDefs: P,
+  graphFn: (params: ParamProxyFor<P>) => void
 ): SynthDef;
-export function synthDef(
+export function synthDef<P extends ParamDefs>(
   name: string,
-  paramDefsOrGraphFn: ParamDefs | ((params: ParamProxy) => void),
-  maybeGraphFn?: (params: ParamProxy) => void
+  paramDefsOrGraphFn: P | (() => void),
+  maybeGraphFn?: (params: ParamProxyFor<P>) => void
 ): SynthDef {
   const builder = new SynthDefBuilder(name);
-  const graphFn = typeof paramDefsOrGraphFn === "function" ? paramDefsOrGraphFn : maybeGraphFn;
-  const paramDefs = typeof paramDefsOrGraphFn === "function" ? {} : paramDefsOrGraphFn;
+  const isNoParamFn = typeof paramDefsOrGraphFn === "function";
+  const graphFn = isNoParamFn ? paramDefsOrGraphFn : maybeGraphFn;
+  const paramDefs = isNoParamFn ? {} : paramDefsOrGraphFn;
 
   if (!graphFn) {
     throw new Error("synthDef requires a graph function");
@@ -221,7 +231,11 @@ export function synthDef(
   setActiveBuilder(builder);
   try {
     const params = builder.buildControls(paramDefs ?? {});
-    graphFn(params);
+    if (isNoParamFn) {
+      (graphFn as () => void)();
+    } else {
+      (graphFn as (params: ParamProxyFor<P>) => void)(params as ParamProxyFor<P>);
+    }
   } finally {
     setActiveBuilder(null);
   }

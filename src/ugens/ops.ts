@@ -78,20 +78,44 @@ export function applyMulAdd(
   return mapDeep(value, (input) => mulAdd(input, mulInput, addInput));
 }
 
-export function add(a: UGenInput, b: UGenInput): UGenInput {
+export function add(a: number, b: number): number;
+export function add(a: UGenOutput, b: UGenInput): UGenOutput;
+export function add(a: UGenInput, b: UGenOutput): UGenOutput;
+export function add(a: UGenOutput | UGenOutput[], b: UGenInput): UGenOutput | UGenOutput[];
+export function add(a: UGenInput, b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function add(a: UGenOutput | UGenOutput[], b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function add(a: UGenInput, b: UGenInput): UGenInput;
+// deno-lint-ignore no-explicit-any
+export function add(a: any, b: any): any {
   if (isNumber(a) && isNumber(b)) return a + b;
   if (isNumber(a) && a === 0) return b;
   if (isNumber(b) && b === 0) return a;
   return binaryOp(0, a, b);
 }
 
-export function sub(a: UGenInput, b: UGenInput): UGenInput {
+export function sub(a: number, b: number): number;
+export function sub(a: UGenOutput, b: UGenInput): UGenOutput;
+export function sub(a: UGenInput, b: UGenOutput): UGenOutput;
+export function sub(a: UGenOutput | UGenOutput[], b: UGenInput): UGenOutput | UGenOutput[];
+export function sub(a: UGenInput, b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function sub(a: UGenOutput | UGenOutput[], b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function sub(a: UGenInput, b: UGenInput): UGenInput;
+// deno-lint-ignore no-explicit-any
+export function sub(a: any, b: any): any {
   if (isNumber(a) && isNumber(b)) return a - b;
   if (isNumber(b) && b === 0) return a;
   return binaryOp(1, a, b);
 }
 
-export function mul(a: UGenInput, b: UGenInput): UGenInput {
+export function mul(a: number, b: number): number;
+export function mul(a: UGenOutput, b: UGenInput): UGenOutput;
+export function mul(a: UGenInput, b: UGenOutput): UGenOutput;
+export function mul(a: UGenOutput | UGenOutput[], b: UGenInput): UGenOutput | UGenOutput[];
+export function mul(a: UGenInput, b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function mul(a: UGenOutput | UGenOutput[], b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function mul(a: UGenInput, b: UGenInput): UGenInput;
+// deno-lint-ignore no-explicit-any
+export function mul(a: any, b: any): any {
   if (isNumber(a) && isNumber(b)) return a * b;
   if ((isNumber(a) && a === 0) || (isNumber(b) && b === 0)) return 0;
   if (isNumber(a) && a === 1) return b;
@@ -99,17 +123,33 @@ export function mul(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(2, a, b);
 }
 
+export function idiv(a: number, b: number): number;
+export function idiv(a: UGenOutput, b: UGenInput): UGenOutput;
+export function idiv(a: UGenInput, b: UGenOutput): UGenOutput;
+export function idiv(a: UGenInput, b: UGenInput): UGenInput;
 export function idiv(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(3, a, b);
 }
 
-export function div(a: UGenInput, b: UGenInput): UGenInput {
+export function div(a: number, b: number): number;
+export function div(a: UGenOutput, b: UGenInput): UGenOutput;
+export function div(a: UGenInput, b: UGenOutput): UGenOutput;
+export function div(a: UGenOutput | UGenOutput[], b: UGenInput): UGenOutput | UGenOutput[];
+export function div(a: UGenInput, b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function div(a: UGenOutput | UGenOutput[], b: UGenOutput | UGenOutput[]): UGenOutput | UGenOutput[];
+export function div(a: UGenInput, b: UGenInput): UGenInput;
+// deno-lint-ignore no-explicit-any
+export function div(a: any, b: any): any {
   if (isNumber(a) && isNumber(b)) return a / b;
   if (isNumber(b) && b === 1) return a;
   if (isNumber(a) && a === 0) return 0;
   return binaryOp(4, a, b);
 }
 
+export function mod(a: number, b: number): number;
+export function mod(a: UGenOutput, b: UGenInput): UGenOutput;
+export function mod(a: UGenInput, b: UGenOutput): UGenOutput;
+export function mod(a: UGenInput, b: UGenInput): UGenInput;
 export function mod(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(5, a, b);
 }
@@ -138,10 +178,18 @@ export function gte(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(11, a, b);
 }
 
+export function min(a: number, b: number): number;
+export function min(a: UGenOutput, b: UGenInput): UGenOutput;
+export function min(a: UGenInput, b: UGenOutput): UGenOutput;
+export function min(a: UGenInput, b: UGenInput): UGenInput;
 export function min(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(12, a, b);
 }
 
+export function max(a: number, b: number): number;
+export function max(a: UGenOutput, b: UGenInput): UGenOutput;
+export function max(a: UGenInput, b: UGenOutput): UGenOutput;
+export function max(a: UGenInput, b: UGenInput): UGenInput;
 export function max(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(13, a, b);
 }
@@ -190,6 +238,10 @@ export function hypotApx(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(24, a, b);
 }
 
+export function pow(a: number, b: number): number;
+export function pow(a: UGenOutput, b: UGenInput): UGenOutput;
+export function pow(a: UGenInput, b: UGenOutput): UGenOutput;
+export function pow(a: UGenInput, b: UGenInput): UGenInput;
 export function pow(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(25, a, b);
 }
@@ -286,6 +338,9 @@ export function exprand(a: UGenInput, b: UGenInput): UGenInput {
   return binaryOp(48, a, b);
 }
 
+export function neg(a: number): number;
+export function neg(a: UGenOutput): UGenOutput;
+export function neg(a: UGenInput): UGenInput;
 export function neg(a: UGenInput): UGenInput {
   if (isNumber(a)) return -a;
   return unaryOp(0, a);
@@ -307,6 +362,9 @@ export function bitNot(a: UGenInput): UGenInput {
   return unaryOp(4, a);
 }
 
+export function abs(a: number): number;
+export function abs(a: UGenOutput): UGenOutput;
+export function abs(a: UGenInput): UGenInput;
 export function abs(a: UGenInput): UGenInput {
   return unaryOp(5, a);
 }
@@ -343,6 +401,9 @@ export function cubed(a: UGenInput): UGenInput {
   return unaryOp(13, a);
 }
 
+export function sqrt(a: number): number;
+export function sqrt(a: UGenOutput): UGenOutput;
+export function sqrt(a: UGenInput): UGenInput;
 export function sqrt(a: UGenInput): UGenInput {
   return unaryOp(14, a);
 }
@@ -355,6 +416,9 @@ export function reciprocal(a: UGenInput): UGenInput {
   return unaryOp(16, a);
 }
 
+export function midicps(a: number): number;
+export function midicps(a: UGenOutput): UGenOutput;
+export function midicps(a: UGenInput): UGenInput;
 export function midicps(a: UGenInput): UGenInput {
   return unaryOp(17, a);
 }

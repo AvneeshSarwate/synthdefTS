@@ -52,7 +52,9 @@ async function sendDef(def: SynthDef): Promise<void> {
   const buf = Buffer.from(binary);
   const msg = new Message("/d_recv", buf);
   await client.send(msg);
-  await sleep(50);
+  // Wait for scsynth to compile the synthdef before playback begins.
+  // 50ms is often too short; 200ms provides more reliable compilation time.
+  await sleep(200);
 }
 
 /** Create a synth on the server. Controls are key-value pairs. */
@@ -317,21 +319,34 @@ async function runGrainChordLerp() {
           // Slide steepness: 0 = linear, 5 = gentle S-curve, 15+ = sharp S-curve
           const slideSteepness = ctx.random() * 20; // 0 - 20
 
+          // Calculate synth lifetime based on its envelope (attack + release)
+          // The synth frees itself via doneAction: 2 when the amp envelope completes.
+          // Stop ramping before the synth is freed to avoid "node not found" errors.
+          const synthLifetime = attack + release;
+
           // Spawn a parallel branch to handle the ramp
           ctx.branch(async (rampCtx) => {
+            let elapsedTime = 0;
             for (let step = 0; step < rampSteps; step++) {
+              // Check if the synth would have freed itself by now
+              // Use a small safety margin (10ms) to avoid race conditions
+              if (elapsedTime >= synthLifetime - 0.01) {
+                break;
+              }
               const t = step / (rampSteps - 1); // 0 to 1
               // Apply sigmoid shaping to the interpolation
               const shaped = sigmoidSlide(t, slideSteepness);
               const currentNote = note + (targetNote - note) * shaped;
               setNode(nodeId, { note: currentNote });
               await rampCtx.waitSec(stepDuration);
+              elapsedTime += stepDuration;
             }
           }, `ramp_${nodeId}`);
         }
 
         // Wait for next note
         await ctx.waitSec(noteIntervalSec);
+        console.log("time", ctx.progTime)
       }
     },
     {

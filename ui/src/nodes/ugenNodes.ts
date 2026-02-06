@@ -478,12 +478,37 @@ export const ParamNode = defineNode({
     out: signalOutput("out"),
   },
   onCreate() {
-    // Update title to show param name
     const nameIntf = this.inputs.name;
     if (nameIntf) {
-      this.title = `Param: ${nameIntf.value}`;
+      const normalizeName = (raw: unknown): string => {
+        const s = String(raw ?? "").trim();
+        return s.length > 0 ? s : "param";
+      };
+      let allowTitleMutation = false;
+
+      const applyTitleFromName = (rawName: unknown) => {
+        const normalized = normalizeName(rawName);
+        const nextTitle = `Param: ${normalized}`;
+        if (this.title !== nextTitle) {
+          allowTitleMutation = true;
+          this.title = nextTitle;
+          allowTitleMutation = false;
+        }
+      };
+
+      // Disable direct rename-menu edits for Param nodes; name input/sidebar
+      // are the canonical source of truth for the parameter name.
+      this.events.beforeTitleChanged.subscribe(this, (_nextTitle, prevent) => {
+        if (!allowTitleMutation) {
+          prevent();
+        }
+      });
+
+      applyTitleFromName(nameIntf.value);
+
+      // Name field (and sidebar, which updates this same interface) drives title.
       nameIntf.events.setValue.subscribe(this, (v) => {
-        this.title = `Param: ${v}`;
+        applyTitleFromName(v);
       });
     }
   },

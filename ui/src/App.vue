@@ -1,74 +1,35 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { BaklavaEditor, useBaklava } from "@baklavajs/renderer-vue";
-import type { AbstractNode } from "@baklavajs/core";
+import {
+  BaklavaEditor,
+  useBaklava,
+  Components as BaklavaComponents,
+} from "@baklavajs/renderer-vue";
 import "@baklavajs/themes/dist/syrup-dark.css";
 import { allNodeTypes } from "./nodes/ugenNodes";
 import { compileGraph } from "./bridge/graphCompiler";
 import { generateTypeScript } from "./bridge/codeGenerator";
 import { loadFilteredSawGraph } from "./bridge/initialGraph";
+import { useParamSidebarBridge } from "./composables/useParamSidebarBridge";
+import ParamNodeTitle from "./components/ParamNodeTitle.vue";
 
 const baklava = useBaklava();
 const synthDefName = ref("ts_filteredSaw");
 const statusMessage = ref("");
 const statusType = ref<"success" | "error" | "info">("info");
 const sidebarOpen = ref(true);
+const BaklavaNode = BaklavaComponents.Node;
 
-// Reactive list of Param nodes in the graph
-const paramSummary = ref<
-  { id: string; name: string; defaultValue: number; rate: string }[]
->([]);
-
-// Track subscriptions so we can clean up
-const subscribedNodeIds = new Set<string>();
-const SYNC_TOKEN = Symbol("paramSync");
-
-function subscribeToParamNode(node: AbstractNode) {
-  if (subscribedNodeIds.has(node.id)) return;
-  subscribedNodeIds.add(node.id);
-
-  // Subscribe to name, defaultValue, and rate changes on this node
-  for (const key of ["name", "defaultValue", "rate"] as const) {
-    const intf = node.inputs[key];
-    if (intf) {
-      intf.events.setValue.subscribe(SYNC_TOKEN, () => {
-        refreshParamSummary();
-      });
-    }
-  }
-}
-
-function refreshParamSummary() {
-  const nodes = Array.from(baklava.editor.graph.nodes);
-  const paramNodes = nodes.filter((n) => n.type === "Param");
-
-  // Subscribe to any new param nodes
-  for (const n of paramNodes) {
-    subscribeToParamNode(n);
-  }
-
-  // Clean up removed nodes
-  const currentIds = new Set(paramNodes.map((n) => n.id));
-  for (const id of subscribedNodeIds) {
-    if (!currentIds.has(id)) subscribedNodeIds.delete(id);
-  }
-
-  paramSummary.value = paramNodes.map((n) => ({
-    id: n.id,
-    name: (n.inputs.name?.value as string) ?? "param",
-    defaultValue: (n.inputs.defaultValue?.value as number) ?? 0,
-    rate: (n.inputs.rate?.value as string) ?? "control",
-  }));
-}
-
-function updateParamName(nodeId: string, newName: string) {
-  const node = Array.from(baklava.editor.graph.nodes).find(
-    (n) => n.id === nodeId
-  );
-  if (node?.inputs.name) {
-    node.inputs.name.value = newName;
-  }
-}
+const {
+  paramSummary,
+  addParam,
+  focusParam,
+  removeParam,
+  updateParamName,
+  startEditingName,
+  stopEditingName,
+  touchGraph,
+} = useParamSidebarBridge(baklava);
 
 onMounted(() => {
   for (const nodeType of allNodeTypes) {
@@ -77,15 +38,7 @@ onMounted(() => {
 
   // Load initial filteredSaw graph
   loadFilteredSawGraph(baklava.editor);
-  refreshParamSummary();
-
-  // Listen for node add/remove to keep sidebar in sync
-  baklava.editor.graph.events.addNode.subscribe(SYNC_TOKEN, () => {
-    refreshParamSummary();
-  });
-  baklava.editor.graph.events.removeNode.subscribe(SYNC_TOKEN, () => {
-    refreshParamSummary();
-  });
+  touchGraph();
 });
 
 function showStatus(msg: string, type: "success" | "error" | "info") {
@@ -148,48 +101,6 @@ function downloadTypeScript() {
   }
 }
 
-function addParam() {
-  const graph = baklava.editor.graph;
-  // Find the Param node type
-  for (const [, ntInfo] of baklava.editor.nodeTypes) {
-    const testNode = new ntInfo.type();
-    if (testNode.type === "Param") {
-      const node = new ntInfo.type();
-      const added = graph.addNode(node);
-      if (added) {
-        // Position below existing params
-        const existingParams = Array.from(graph.nodes).filter(
-          (n) => n.type === "Param"
-        );
-        added.position.x = 50;
-        added.position.y = (existingParams.length - 1) * 120 + 50;
-        added.inputs.name!.value = `param${existingParams.length}`;
-      }
-      break;
-    }
-  }
-  refreshParamSummary();
-}
-
-function focusParam(nodeId: string) {
-  const node = Array.from(baklava.editor.graph.nodes).find(
-    (n) => n.id === nodeId
-  );
-  if (node) {
-    // Select the node
-    baklava.editor.graph.selectedNodes = [node];
-  }
-}
-
-function removeParam(nodeId: string) {
-  const node = Array.from(baklava.editor.graph.nodes).find(
-    (n) => n.id === nodeId
-  );
-  if (node) {
-    baklava.editor.graph.removeNode(node);
-  }
-  refreshParamSummary();
-}
 </script>
 
 <template>
@@ -241,8 +152,11 @@ function removeParam(nodeId: string) {
             <div class="param-info">
               <input
                 class="param-name-input"
+                :data-param-id="param.id"
                 :value="param.name"
                 @input="updateParamName(param.id, ($event.target as HTMLInputElement).value)"
+                @focus="startEditingName(param.id)"
+                @blur="stopEditingName(param.id)"
                 @click.stop
               />
               <span class="param-meta">
@@ -265,7 +179,26 @@ function removeParam(nodeId: string) {
       </aside>
       <!-- Graph editor -->
       <div class="editor-container">
-        <BaklavaEditor :view-model="baklava" />
+        <BaklavaEditor :view-model="baklava">
+          <template #node="{ node, selected, dragging, onStartDrag, onSelect }">
+            <BaklavaNode
+              :node="node"
+              :selected="selected"
+              :dragging="dragging"
+              @select="() => onSelect(undefined)"
+              @start-drag="(ev) => onStartDrag(ev)"
+            >
+              <template v-if="node.type === 'Param'" #title>
+                <ParamNodeTitle
+                  :node="node"
+                  :selected="selected"
+                  :on-select="onSelect"
+                  :on-start-drag="onStartDrag"
+                />
+              </template>
+            </BaklavaNode>
+          </template>
+        </BaklavaEditor>
       </div>
     </div>
   </div>

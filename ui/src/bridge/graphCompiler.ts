@@ -6,181 +6,18 @@
  */
 
 import type { AbstractNode, IConnection, Graph } from "@baklavajs/core";
-
-// ─── Inline types mirroring synthdefTS/src (avoid Deno import issues in Vite) ─
-
-enum Rate {
-  Scalar = 0,
-  Control = 1,
-  Audio = 2,
-  Demand = 3,
-}
-
-enum ParameterRate {
-  Scalar = 0,
-  Control = 1,
-  Trigger = 2,
-  Audio = 3,
-}
-
-interface UGenOutput {
-  ugen: UGenNode;
-  outputIndex: number;
-  rate: Rate;
-}
-
-type UGenInput = UGenOutput | number;
-
-interface UGenNode {
-  id: number;
-  name: string;
-  rate: Rate;
-  specialIndex: number;
-  inputs: UGenInput[];
-  outputs: UGenOutput[];
-  widthFirstAntecedents?: UGenNode[];
-  synthIndex?: number;
-}
-
-interface ControlName {
-  name: string;
-  index: number;
-  rate: ParameterRate;
-  defaultValue: number | number[];
-}
-
-interface SynthDefData {
-  name: string;
-  ugens: UGenNode[];
-  controlNames: ControlName[];
-  paramValues: number[];
-  variants: Map<string, number[]>;
-}
-
-// ─── Compiled types ───────────────────────────────────────────────────────────
-
-interface CompiledInput {
-  src: number;
-  index: number;
-}
-
-interface CompiledUGen {
-  name: string;
-  rate: Rate;
-  specialIndex: number;
-  inputs: CompiledInput[];
-  outputs: Rate[];
-}
-
-interface CompiledSynthDef {
-  name: string;
-  constants: number[];
-  paramValues: number[];
-  paramNames: { name: string; index: number }[];
-  ugens: CompiledUGen[];
-  variants: Map<string, number[]>;
-}
-
-// ─── Envelope helpers (inline to avoid cross-runtime import) ──────────────────
-
-const CURVE_MAP: Record<string, number> = {
-  step: 0,
-  hold: 0,
-  lin: 1,
-  linear: 1,
-  exp: 2,
-  exponential: 2,
-  sin: 3,
-  sine: 3,
-  wel: 4,
-  welch: 4,
-  sqr: 5,
-  squared: 5,
-  cub: 6,
-  cubed: 6,
-};
-
-function curveValue(c: string | number): number {
-  if (typeof c === "number") return c;
-  return CURVE_MAP[c] ?? 1;
-}
-
-function envPerc(attack: number, release: number, level: number): number[] {
-  const levels = [0, level, 0];
-  const times = [attack, release];
-  const curves = [-4, -4];
-  return encodeEnv(levels, times, curves);
-}
-
-function envAdsr(
-  attack: number,
-  decay: number,
-  sustain: number,
-  release: number,
-  level: number
-): number[] {
-  const levels = [0, level, level * sustain, 0];
-  const times = [attack, decay, release];
-  const curves = [-4, -4, -4];
-  return encodeEnv(levels, times, curves, 2);
-}
-
-function envAsr(
-  attack: number,
-  sustain: number,
-  release: number
-): number[] {
-  const levels = [0, sustain, 0];
-  const times = [attack, release];
-  const curves = [-4, -4];
-  return encodeEnv(levels, times, curves, 1);
-}
-
-function envLinen(
-  attack: number,
-  sustain: number,
-  release: number,
-  level: number
-): number[] {
-  const levels = [0, level, level, 0];
-  const times = [attack, sustain, release];
-  const curves = [1, 1, 1];
-  return encodeEnv(levels, times, curves);
-}
-
-function envTriangle(dur: number, level: number): number[] {
-  const half = dur / 2;
-  const levels = [0, level, 0];
-  const times = [half, half];
-  const curves = [1, 1];
-  return encodeEnv(levels, times, curves);
-}
-
-function encodeEnv(
-  levels: number[],
-  times: number[],
-  curves: (number | string)[],
-  releaseNode = -99,
-  loopNode = -99
-): number[] {
-  const numStages = times.length;
-  const result: number[] = [
-    levels[0],
-    numStages,
-    releaseNode,
-    loopNode,
-  ];
-  for (let i = 0; i < numStages; i++) {
-    result.push(levels[i + 1]);
-    result.push(times[i]);
-    const cv = curveValue(curves[i] ?? 1);
-    // curve type: if it's a named curve, use the mapped int; if numeric and not a standard curve type, use type 5 (custom)
-    const ct = typeof curves[i] === "string" ? curveValue(curves[i]) : 5;
-    result.push(ct);
-    result.push(cv);
-  }
-  return result;
-}
+import { Rate, ParameterRate } from "@synthdef/graph/types.ts";
+import type {
+  UGenOutput,
+  UGenInput,
+  UGenNode,
+  ControlName,
+} from "@synthdef/graph/types.ts";
+import type { SynthDefData } from "@synthdef/graph/builder.ts";
+import { compileSynthDef } from "@synthdef/graph/compiler.ts";
+import type { CompiledSynthDef } from "@synthdef/graph/compiler.ts";
+import { encodeSynthDef } from "@synthdef/binary/encoder.ts";
+import { perc, adsr, asr, linen, env } from "@synthdef/ugens/envelope.ts";
 
 // ─── Binary operator special indices (matching SuperCollider) ─────────────────
 
@@ -343,6 +180,8 @@ function getUGenInputKeys(nodeType: string): string[] {
     // Math (unary ops)
     case "UnaryOpUGen_Abs":
     case "UnaryOpUGen_Neg":
+    case "UnaryOpUGen_MidiCps":
+    case "UnaryOpUGen_CpsMidi":
       return ["in"];
     // Control
     case "Line":
@@ -572,22 +411,26 @@ export function compileGraph(
       let envData: number[];
       switch (envShape) {
         case "perc":
-          envData = envPerc(attack, release, level);
+          envData = perc({ attack, release, level });
           break;
         case "adsr":
-          envData = envAdsr(attack, decay, sustain, release, level);
+          envData = adsr({ attack, decay, sustain, release, peak: level });
           break;
         case "asr":
-          envData = envAsr(attack, sustain, release);
+          envData = asr({ attack, sustain, release });
           break;
         case "linen":
-          envData = envLinen(attack, sustain, release, level);
+          envData = linen({ attack, sustain, release, level });
           break;
         case "triangle":
-          envData = envTriangle(release, level);
+          envData = env({
+            levels: [0, level, 0],
+            times: [release / 2, release / 2],
+            curves: ["lin"],
+          });
           break;
         default:
-          envData = envPerc(attack, release, level);
+          envData = perc({ attack, release, level });
       }
 
       // Resolve gate input
@@ -659,241 +502,11 @@ export function compileGraph(
     variants: new Map(),
   };
 
-  // ── Compile ─────────────────────────────────────────────────────────────
-  const compiled = compileSynthDefInline(synthDefData);
-  const binary = encodeSynthDefInline(compiled);
+  // ── Compile & encode using the main library ────────────────────────────
+  const compiled = compileSynthDef(synthDefData);
+  const binary = encodeSynthDef(compiled);
 
   return { binary, compiled };
-}
-
-// ─── Inline compiler (mirrors synthdefTS/src/graph/compiler.ts) ───────────────
-
-function compileSynthDefInline(data: SynthDefData): CompiledSynthDef {
-  const constants: number[] = [];
-  const constantMap = new Map<number, number>();
-
-  const addConstant = (value: number): number => {
-    const existing = constantMap.get(value);
-    if (existing !== undefined) return existing;
-    const index = constants.length;
-    constants.push(value);
-    constantMap.set(value, index);
-    return index;
-  };
-
-  // Collect constants
-  for (const ugen of data.ugens) {
-    for (const input of ugen.inputs) {
-      if (typeof input === "number") {
-        addConstant(input);
-      }
-    }
-  }
-
-  const nodes = data.ugens;
-  const buildIndex = new Map<UGenNode, number>();
-  nodes.forEach((node, index) => buildIndex.set(node, index));
-
-  const antecedents = new Map<UGenNode, Set<UGenNode>>();
-  const descendants = new Map<UGenNode, Set<UGenNode>>();
-  for (const node of nodes) {
-    antecedents.set(node, new Set());
-    descendants.set(node, new Set());
-  }
-
-  for (const node of nodes) {
-    for (const input of node.inputs) {
-      if (typeof input !== "number") {
-        const src = input.ugen;
-        const dst = node;
-        if (src === dst) continue;
-        const dstSet = antecedents.get(dst);
-        if (dstSet && !dstSet.has(src)) {
-          dstSet.add(src);
-          descendants.get(src)?.add(dst);
-        }
-      }
-    }
-  }
-
-  const available: UGenNode[] = [];
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    if ((antecedents.get(nodes[i])?.size ?? 0) === 0) {
-      available.push(nodes[i]);
-    }
-  }
-
-  const sorted: UGenNode[] = [];
-  while (available.length > 0) {
-    const node = available.pop()!;
-    sorted.push(node);
-
-    const descSet = descendants.get(node);
-    if (!descSet) continue;
-    const descList = Array.from(descSet).sort(
-      (a, b) => (buildIndex.get(a) ?? 0) - (buildIndex.get(b) ?? 0)
-    );
-
-    for (let i = descList.length - 1; i >= 0; i--) {
-      const desc = descList[i];
-      const set = antecedents.get(desc);
-      if (!set) continue;
-      set.delete(node);
-      if (set.size === 0) available.push(desc);
-    }
-  }
-
-  if (sorted.length !== nodes.length) {
-    throw new Error("UGen graph contains a cycle or unresolved dependencies");
-  }
-
-  sorted.forEach((node, index) => {
-    node.synthIndex = index;
-  });
-
-  const compiledUGens: CompiledUGen[] = sorted.map((node) => {
-    const inputs: CompiledInput[] = node.inputs.map((input) => {
-      if (typeof input === "number") {
-        const index = constantMap.get(input);
-        if (index === undefined) {
-          return { src: -1, index: addConstant(input) };
-        }
-        return { src: -1, index };
-      }
-      const srcIndex = input.ugen.synthIndex;
-      if (srcIndex === undefined) {
-        throw new Error("UGen missing synthIndex during compilation");
-      }
-      return { src: srcIndex, index: input.outputIndex };
-    });
-
-    return {
-      name: node.name,
-      rate: node.rate,
-      specialIndex: node.specialIndex,
-      inputs,
-      outputs: node.outputs.map((o) => o.rate),
-    };
-  });
-
-  return {
-    name: data.name,
-    constants,
-    paramValues: data.paramValues.slice(),
-    paramNames: data.controlNames.map((cn) => ({
-      name: cn.name,
-      index: cn.index,
-    })),
-    ugens: compiledUGens,
-    variants: data.variants,
-  };
-}
-
-// ─── Inline encoder (mirrors synthdefTS/src/binary/encoder.ts) ────────────────
-
-class BinaryWriter {
-  private chunks: Uint8Array[] = [];
-
-  writeRaw(bytes: Uint8Array): void {
-    this.chunks.push(bytes);
-  }
-
-  writeInt8(value: number): void {
-    const buf = new Uint8Array(1);
-    const view = new DataView(buf.buffer);
-    view.setInt8(0, value);
-    this.chunks.push(buf);
-  }
-
-  writeInt16(value: number): void {
-    const buf = new Uint8Array(2);
-    const view = new DataView(buf.buffer);
-    view.setInt16(0, value, false);
-    this.chunks.push(buf);
-  }
-
-  writeInt32(value: number): void {
-    const buf = new Uint8Array(4);
-    const view = new DataView(buf.buffer);
-    view.setInt32(0, value, false);
-    this.chunks.push(buf);
-  }
-
-  writeFloat32(value: number): void {
-    const buf = new Uint8Array(4);
-    const view = new DataView(buf.buffer);
-    view.setFloat32(0, value, false);
-    this.chunks.push(buf);
-  }
-
-  writePString(value: string): void {
-    const encoded = new TextEncoder().encode(value);
-    this.writeInt8(encoded.length);
-    this.writeRaw(encoded);
-  }
-
-  concat(): Uint8Array {
-    let totalLength = 0;
-    for (const chunk of this.chunks) totalLength += chunk.length;
-    const result = new Uint8Array(totalLength);
-    let offset = 0;
-    for (const chunk of this.chunks) {
-      result.set(chunk, offset);
-      offset += chunk.length;
-    }
-    return result;
-  }
-}
-
-function encodeSynthDefInline(def: CompiledSynthDef): Uint8Array {
-  const w = new BinaryWriter();
-
-  // File header
-  w.writeRaw(new TextEncoder().encode("SCgf"));
-  w.writeInt32(2); // version
-  w.writeInt16(1); // 1 synthdef
-
-  // SynthDef name
-  w.writePString(def.name);
-
-  // Constants
-  w.writeInt32(def.constants.length);
-  for (const c of def.constants) w.writeFloat32(c);
-
-  // Parameters
-  w.writeInt32(def.paramValues.length);
-  for (const v of def.paramValues) w.writeFloat32(v);
-
-  // Param names
-  w.writeInt32(def.paramNames.length);
-  for (const pn of def.paramNames) {
-    w.writePString(pn.name);
-    w.writeInt32(pn.index);
-  }
-
-  // UGens
-  w.writeInt32(def.ugens.length);
-  for (const ugen of def.ugens) {
-    w.writePString(ugen.name);
-    w.writeInt8(ugen.rate);
-    w.writeInt32(ugen.inputs.length);
-    w.writeInt32(ugen.outputs.length);
-    w.writeInt16(ugen.specialIndex);
-
-    for (const input of ugen.inputs) {
-      w.writeInt32(input.src);
-      w.writeInt32(input.index);
-    }
-
-    for (const outputRate of ugen.outputs) {
-      w.writeInt8(outputRate);
-    }
-  }
-
-  // Variants
-  w.writeInt16(0);
-
-  return w.concat();
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

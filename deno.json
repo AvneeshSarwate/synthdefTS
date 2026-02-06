@@ -4,7 +4,8 @@
     "gen:fixtures": "/Applications/SuperCollider.app/Contents/MacOS/sclang scripts/generate-fixtures.scd",
     "codegen": "deno run --allow-read --allow-write codegen/run.ts",
     "play": "deno run --allow-net --allow-read tests/play.ts",
-    "grainChordLerp": "deno run --allow-net --allow-read tests/grainChordLerp.ts"
+    "grainChordLerp": "deno run --allow-net --allow-read tests/grainChordLerp.ts",
+    "ui": "cd ui && deno run -A npm:vite"
   },
   "imports": {
     "@std/random": "jsr:@std/random@^0.1.5",

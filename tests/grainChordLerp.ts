@@ -172,9 +172,9 @@ const chordB = [63, 66, 69]; // Eb minor (D#m)
 // Helper: MIDI to frequency
 // ---------------------------------------------------------------------------
 
-function midiToFreq(midi: number): number {
-  return 440 * Math.pow(2, (midi - 69) / 12);
-}
+// function midiToFreq(midi: number): number {
+//   return 440 * Math.pow(2, (midi - 69) / 12);
+// }
 
 // ---------------------------------------------------------------------------
 // Sigmoid helper for smooth chord transitions

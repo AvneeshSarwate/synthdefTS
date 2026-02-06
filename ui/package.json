@@ -1,0 +1,30 @@
+{
+  "name": "ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@baklavajs/core": "^2.8.1",
+    "@baklavajs/engine": "^2.8.1",
+    "@baklavajs/events": "^2.8.0",
+    "@baklavajs/interface-types": "^2.8.1",
+    "@baklavajs/renderer-vue": "^2.8.1",
+    "@baklavajs/themes": "^2.8.1",
+    "@deno/vite-plugin": "^1.0.6",
+    "baklavajs": "^2.8.1",
+    "vue": "^3.5.24"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4",
+    "vue-tsc": "^3.1.4"
+  }
+}

@@ -4,6 +4,9 @@
     "build": "deno run -A npm:vite build",
     "preview": "deno run -A npm:vite preview"
   },
+  "imports": {
+    "@synthdef/": "../src/"
+  },
   "nodeModulesDir": "auto",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "deno.ns"],

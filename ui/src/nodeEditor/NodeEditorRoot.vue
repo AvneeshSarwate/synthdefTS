@@ -91,6 +91,7 @@ const {
   focusParam,
   removeParam,
   updateParamName,
+  commitParamName,
   startEditingName,
   stopEditingName,
 } = useParamSidebarBridge(editorSession, graphVersion);
@@ -871,6 +872,7 @@ defineExpose({
                 :data-param-id="param.id"
                 :value="param.name"
                 @input="updateParamName(param.id, ($event.target as HTMLInputElement).value)"
+                @keydown.enter.prevent="commitParamName(param.id)"
                 @focus="startEditingName(param.id)"
                 @blur="stopEditingName(param.id)"
                 @click.stop

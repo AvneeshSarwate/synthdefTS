@@ -805,13 +805,8 @@ export async function createReteEditorSession(
   };
 
   const onInputChange = (node: SynthNode, key: string) => {
-    const control = node.getInputControl(key);
-    if (control) {
-      void area.update("control", control.id);
-    }
-    if (node.type === "Param" && key === "name") {
-      void area.update("node", node.id);
-    }
+    // Live control edits already update their own DOM state; forcing a render here
+    // can blur focused inputs (especially text controls).
     notifyGraphChange(`Update ${node.type}.${key}`, 10);
   };
 

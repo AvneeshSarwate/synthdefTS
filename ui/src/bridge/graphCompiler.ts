@@ -1,11 +1,15 @@
 /**
- * Converts a BaklavaJS graph into a SuperCollider SynthDef binary.
+ * Converts node-editor graph data into a SuperCollider SynthDef binary.
  *
- * Strategy: walk the Baklava graph, build UGenNode objects directly,
- * then feed the resulting SynthDefData to compileSynthDef → encodeSynthDef.
+ * Strategy: walk the graph, build UGenNode objects directly,
+ * then feed the resulting SynthDefData to compileSynthDef -> encodeSynthDef.
  */
 
-import type { AbstractNode, IConnection, Graph } from "@baklavajs/core";
+import type {
+  NodeEditorGraphConnection as IConnection,
+  NodeEditorGraphModel as Graph,
+  NodeEditorGraphNode as AbstractNode,
+} from "../nodeEditor/graphTypes";
 import { Rate, ParameterRate } from "@synthdef/graph/types.ts";
 import type {
   UGenOutput,
@@ -119,18 +123,7 @@ function topoSort(
 // ─── Main compiler ────────────────────────────────────────────────────────────
 
 /**
- * Input interface key names that are NOT UGen signal inputs
- * (they are config selectors).
- */
-const NON_SIGNAL_INPUTS = new Set([
-  "rate",
-  "envShape",
-  "doneAction",
-  "name",
-]);
-
-/**
- * For a given Baklava node, return the list of UGen input parameter keys
+ * For a given node, return the list of UGen input parameter keys
  * in the order SuperCollider expects them.
  */
 function getUGenInputKeys(nodeType: string): string[] {
@@ -246,7 +239,7 @@ function resolveRate(
 
 function parseDoneAction(value: string): number {
   const match = value.match(/^(\d+)/);
-  return match ? parseInt(match[1], 10) : 0;
+  return match?.[1] ? parseInt(match[1], 10) : 0;
 }
 
 export interface CompileResult {
@@ -295,7 +288,7 @@ export function compileGraph(
     [ParameterRate.Control, "Control", Rate.Control],
   ];
 
-  // Map from Baklava param node ID → UGenOutput
+  // Map from Param node ID -> UGenOutput
   const paramOutputMap = new Map<string, UGenOutput>();
 
   let controlIndex = 0;
@@ -340,7 +333,9 @@ export function compileGraph(
         defaultValue: pDefault,
       });
       paramValues.push(pDefault);
-      paramOutputMap.set(pNode.id, outputs[offset]);
+      if (outputs[offset]) {
+        paramOutputMap.set(pNode.id, outputs[offset]);
+      }
       offset += 1;
     }
 
@@ -350,7 +345,7 @@ export function compileGraph(
   // ── Topological sort of UGen nodes ──────────────────────────────────────
   const sorted = topoSort(ugenNodes, connections);
 
-  // Map from Baklava node ID → UGenNode (for resolving connections)
+  // Map from node ID -> UGenNode (for resolving connections)
   const nodeUGenMap = new Map<string, UGenNode>();
 
   for (const bNode of sorted) {
@@ -385,7 +380,8 @@ export function compileGraph(
           const sourceUGen = nodeUGenMap.get(conn.fromNode.id);
           if (sourceUGen) {
             const outIdx = getOutputIndex(conn.fromNode, conn.fromInterfaceKey);
-            ugenInputs.push(sourceUGen.outputs[outIdx]);
+            const sourceOutput = sourceUGen.outputs[outIdx];
+            ugenInputs.push(sourceOutput ?? 0);
           } else {
             ugenInputs.push(0);
           }
@@ -449,7 +445,7 @@ export function compileGraph(
                 gateConn.fromNode,
                 gateConn.fromInterfaceKey
               );
-              gateInput = sourceUGen.outputs[outIdx];
+              gateInput = sourceUGen.outputs[outIdx] ?? 0;
             }
           }
         } else {

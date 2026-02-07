@@ -1,17 +1,15 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@baklavajs/core@^2.8.1": "2.8.1",
-    "npm:@baklavajs/engine@^2.8.1": "2.8.1",
-    "npm:@baklavajs/events@^2.8.0": "2.8.0",
-    "npm:@baklavajs/interface-types@^2.8.1": "2.8.1",
-    "npm:@baklavajs/renderer-vue@^2.8.1": "2.8.1",
-    "npm:@baklavajs/themes@^2.8.1": "2.8.1",
     "npm:@deno/vite-plugin@^1.0.6": "1.0.6_vite@7.3.1__@types+node@24.10.9__picomatch@4.0.3_@types+node@24.10.9",
     "npm:@types/node@^24.10.1": "24.10.9",
     "npm:@vitejs/plugin-vue@^6.0.1": "6.0.3_vite@7.3.1__@types+node@24.10.9__picomatch@4.0.3_vue@3.5.27__typescript@5.9.3_@types+node@24.10.9_typescript@5.9.3",
     "npm:@vue/tsconfig@~0.8.1": "0.8.1_typescript@5.9.3_vue@3.5.27__typescript@5.9.3",
-    "npm:baklavajs@^2.8.1": "2.8.1",
+    "npm:rete-area-plugin@^2.1.5": "2.1.5_rete@2.0.6",
+    "npm:rete-connection-plugin@^2.0.5": "2.0.5_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6",
+    "npm:rete-history-plugin@^2.1.1": "2.1.1_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6",
+    "npm:rete-vue-plugin@^2.1.2": "2.1.2_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6_rete-render-utils@2.0.3__rete@2.0.6__rete-area-plugin@2.1.5___rete@2.0.6_vue@3.5.27__typescript@5.9.3_typescript@5.9.3",
+    "npm:rete@^2.0.6": "2.0.6",
     "npm:typescript@~5.9.3": "5.9.3",
     "npm:vite@*": "7.3.1_@types+node@24.10.9_picomatch@4.0.3",
     "npm:vite@^7.2.4": "7.3.1_@types+node@24.10.9_picomatch@4.0.3",
@@ -33,47 +31,15 @@
       ],
       "bin": true
     },
+    "@babel/runtime@7.28.6": {
+      "integrity": "sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA=="
+    },
     "@babel/types@7.28.6": {
       "integrity": "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg==",
       "dependencies": [
         "@babel/helper-string-parser",
         "@babel/helper-validator-identifier"
       ]
-    },
-    "@baklavajs/core@2.8.1": {
-      "integrity": "sha512-pS8LlTN3+im2QYAOIoj4NfxM/f8fwc2acF9sLwIPOZ+a8DoSYlzsyQX7VFMqg9MshhiJBH0qVhIHFO2kRga7uQ==",
-      "dependencies": [
-        "@baklavajs/events",
-        "uuid"
-      ]
-    },
-    "@baklavajs/engine@2.8.1": {
-      "integrity": "sha512-MbkgzqN9vgS1Bm+VIJL8fVLemj//jWbo5eMihOj/bcctDLdz1DTlawhr06IpPutE+TMvwF24jpWIOdEeWhSjbQ==",
-      "dependencies": [
-        "@baklavajs/core",
-        "@baklavajs/events"
-      ]
-    },
-    "@baklavajs/events@2.8.0": {
-      "integrity": "sha512-dPl2Z8p7o9HwEOd3TclnHMQTSCuGyUcHyzAxijuQI13LTWUMbtyHl1yBMH5wuy+yUsR6/NQnH//4+rDCyiFoJw=="
-    },
-    "@baklavajs/interface-types@2.8.1": {
-      "integrity": "sha512-QQ1gjhCX0eAhIIwZPbr9FGHVEcdnEGR+FXKf0SdrOazgCS4DPwQVEXs2yj8+0i4hqgWnV7Vs4cPm9cqqIKj+QQ==",
-      "dependencies": [
-        "@baklavajs/core",
-        "@baklavajs/engine",
-        "@baklavajs/renderer-vue"
-      ]
-    },
-    "@baklavajs/renderer-vue@2.8.1": {
-      "integrity": "sha512-RzUYZ3rePfqOnZGXQQoQpccUBg6dCgOx/qTDjzrw01ZwCciZbNfZPV5dp8ednOXQKukPmmvl161MVUgEuBXQqg==",
-      "dependencies": [
-        "@baklavajs/core",
-        "@baklavajs/events"
-      ]
-    },
-    "@baklavajs/themes@2.8.1": {
-      "integrity": "sha512-qmOfY+Pqk7PY2PJm+ML3vW2CD1taRjxNKmIAJ3x5IbiBaPh2a/DqZz4kwr2PktfOuYokuMLorsm50jj0rlKifA=="
     },
     "@deno/vite-plugin@1.0.6_vite@7.3.1__@types+node@24.10.9__picomatch@4.0.3_@types+node@24.10.9": {
       "integrity": "sha512-Sh5XqvFuKAwjARTesi0n6xRpEXm1V0UeqKh+SxIrexCofxOaieNDMqXZD02RiZCg0mrJ43V8eCMuVrDfq6mLmg==",
@@ -473,16 +439,6 @@
     "alien-signals@3.1.2": {
       "integrity": "sha512-d9dYqZTS90WLiU0I5c6DHj/HcKkF8ZyGN3G5x8wSbslulz70KOxaqCT0hQCo9KOyhVqzqGojvNdJXoTumZOtcw=="
     },
-    "baklavajs@2.8.1": {
-      "integrity": "sha512-dfZx1fsVMz7K5cKXKLglCOPyZGSGMkgx0z8wAgIE8vSsMRS9axx08ZjAz7StJrMV3mxH/qmoqq9Mw+nw7jQukw==",
-      "dependencies": [
-        "@baklavajs/core",
-        "@baklavajs/engine",
-        "@baklavajs/interface-types",
-        "@baklavajs/renderer-vue",
-        "@baklavajs/themes"
-      ]
-    },
     "csstype@3.2.3": {
       "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="
     },
@@ -569,6 +525,54 @@
         "source-map-js"
       ]
     },
+    "rete-area-plugin@2.1.5_rete@2.0.6": {
+      "integrity": "sha512-iquEvwkQlcsO4cmgM3Z37TG0AWaE536dfA+lCJAze5YJzVx4RBaViUCqdB4dUA/utSytpBCkiDC4D3ztM9akGQ==",
+      "dependencies": [
+        "@babel/runtime",
+        "rete"
+      ]
+    },
+    "rete-connection-plugin@2.0.5_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6": {
+      "integrity": "sha512-KFtlOyEJRc0y9STVgo2T+t+j9u5fxiTxbyzPbMCm0uqncb3b8d2ABDIzvWoNo5zQAh2Oz/OvlUovupbzrGzpSg==",
+      "dependencies": [
+        "@babel/runtime",
+        "rete",
+        "rete-area-plugin"
+      ]
+    },
+    "rete-history-plugin@2.1.1_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6": {
+      "integrity": "sha512-Kb2FF51qwl9axSVzusZDJ7ojksg0qPBY3CIhAusHxTLYzO5Di1Nu3cAzHUOHik6kcb3eZI+GYdfqaj/E8xggxQ==",
+      "dependencies": [
+        "@babel/runtime",
+        "rete",
+        "rete-area-plugin"
+      ]
+    },
+    "rete-render-utils@2.0.3_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6": {
+      "integrity": "sha512-Oz4W2PNayHocRvlzadb5BCNf+tDzJ8RhTwB3ucBPCdCLKZ974wWDiTSCRfA287L2hmHVzRfBdyAwC03K9eP+4g==",
+      "dependencies": [
+        "@babel/runtime",
+        "rete",
+        "rete-area-plugin"
+      ]
+    },
+    "rete-vue-plugin@2.1.2_rete@2.0.6_rete-area-plugin@2.1.5__rete@2.0.6_rete-render-utils@2.0.3__rete@2.0.6__rete-area-plugin@2.1.5___rete@2.0.6_vue@3.5.27__typescript@5.9.3_typescript@5.9.3": {
+      "integrity": "sha512-vMHCaAoJE9C9axEEIxg2nbrSYC6bFp5rWoAzAKGaLaEMT8y6m9mFb1o45dW8SF2v3DrbwXVjuEHRZxmg8CCOfg==",
+      "dependencies": [
+        "@babel/runtime",
+        "rete",
+        "rete-area-plugin",
+        "rete-render-utils",
+        "vue"
+      ]
+    },
+    "rete@2.0.6": {
+      "integrity": "sha512-kPmlKCGFES2VWtY7Y7SCB8ZeXRMsgX5deza9cu4OwmfM/ZUimd461kC3hRyccoyVxE4POlHUx0gg2jcGfusHFg==",
+      "dependencies": [
+        "@babel/runtime"
+      ],
+      "scripts": true
+    },
     "rollup@4.57.0": {
       "integrity": "sha512-e5lPJi/aui4TO1LpAXIRLySmwXSE8k3b9zoGfd42p67wzxog4WHjiZF3M2uheQih4DGyc25QEV4yRBbpueNiUA==",
       "dependencies": [
@@ -621,10 +625,6 @@
     "undici-types@7.16.0": {
       "integrity": "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw=="
     },
-    "uuid@13.0.0": {
-      "integrity": "sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==",
-      "bin": true
-    },
     "vite@7.3.1_@types+node@24.10.9_picomatch@4.0.3": {
       "integrity": "sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==",
       "dependencies": [
@@ -674,17 +674,15 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@baklavajs/core@^2.8.1",
-        "npm:@baklavajs/engine@^2.8.1",
-        "npm:@baklavajs/events@^2.8.0",
-        "npm:@baklavajs/interface-types@^2.8.1",
-        "npm:@baklavajs/renderer-vue@^2.8.1",
-        "npm:@baklavajs/themes@^2.8.1",
         "npm:@deno/vite-plugin@^1.0.6",
         "npm:@types/node@^24.10.1",
         "npm:@vitejs/plugin-vue@^6.0.1",
         "npm:@vue/tsconfig@~0.8.1",
-        "npm:baklavajs@^2.8.1",
+        "npm:rete-area-plugin@^2.1.5",
+        "npm:rete-connection-plugin@^2.0.5",
+        "npm:rete-history-plugin@^2.1.1",
+        "npm:rete-vue-plugin@^2.1.2",
+        "npm:rete@^2.0.6",
         "npm:typescript@~5.9.3",
         "npm:vite@^7.2.4",
         "npm:vue-tsc@^3.1.4",

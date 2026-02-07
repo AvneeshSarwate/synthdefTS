@@ -9,14 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@baklavajs/core": "^2.8.1",
-    "@baklavajs/engine": "^2.8.1",
-    "@baklavajs/events": "^2.8.0",
-    "@baklavajs/interface-types": "^2.8.1",
-    "@baklavajs/renderer-vue": "^2.8.1",
-    "@baklavajs/themes": "^2.8.1",
     "@deno/vite-plugin": "^1.0.6",
-    "baklavajs": "^2.8.1",
+    "rete": "^2.0.6",
+    "rete-area-plugin": "^2.1.5",
+    "rete-connection-plugin": "^2.0.5",
+    "rete-history-plugin": "^2.1.1",
+    "rete-vue-plugin": "^2.1.2",
     "vue": "^3.5.24"
   },
   "devDependencies": {

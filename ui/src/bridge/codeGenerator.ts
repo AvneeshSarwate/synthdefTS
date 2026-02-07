@@ -1,9 +1,13 @@
 /**
- * Generates TypeScript synthdef code from a BaklavaJS graph.
+ * Generates TypeScript synthdef code from the node-editor graph.
  * Produces code using the synthdefTS library API (synthDef, kr, SinOsc.ar, etc.)
  */
 
-import type { AbstractNode, IConnection, Graph } from "@baklavajs/core";
+import type {
+  NodeEditorGraphConnection as IConnection,
+  NodeEditorGraphModel as Graph,
+  NodeEditorGraphNode as AbstractNode,
+} from "../nodeEditor/graphTypes";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -169,7 +173,7 @@ function opFunctionName(nodeType: string): string | null {
 
 function parseDoneAction(value: string): number {
   const match = value.match(/^(\d+)/);
-  return match ? parseInt(match[1], 10) : 0;
+  return match?.[1] ? parseInt(match[1], 10) : 0;
 }
 
 // Which input keys for a given node type (for code generation)
@@ -363,11 +367,11 @@ export function generateTypeScript(
       // Binary/unary op
       const keys = getNodeInputKeys(nodeType);
       if (keys.length === 2) {
-        const a = resolveInput(node, keys[0]);
-        const b = resolveInput(node, keys[1]);
+        const a = resolveInput(node, keys[0]!);
+        const b = resolveInput(node, keys[1]!);
         bodyLines.push(`    const ${vName} = ${opFn}(${a}, ${b});`);
       } else if (keys.length === 1) {
-        const a = resolveInput(node, keys[0]);
+        const a = resolveInput(node, keys[0]!);
         bodyLines.push(`    const ${vName} = ${opFn}(${a});`);
       }
     } else if (nodeType === "MulAdd") {

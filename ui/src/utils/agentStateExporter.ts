@@ -43,6 +43,10 @@ export function unregisterAgentCapture(id: string) {
   registeredComponents.delete(id);
 }
 
+export function listRegisteredComponentIds(): string[] {
+  return Array.from(registeredComponents.keys());
+}
+
 /**
  * Capture full snapshot of all registered components.
  * Called by the AI agent via page.evaluate(() => window.__agentSnapshot())
@@ -70,9 +74,29 @@ function captureAgentSnapshot(): AgentSnapshot {
   };
 }
 
+export function captureComponentSnapshot(id: string): ComponentSnapshot | null {
+  const capturer = registeredComponents.get(id);
+  if (!capturer) {
+    return null;
+  }
+
+  try {
+    return capturer();
+  } catch (e) {
+    return {
+      name: id,
+      tagName: "error",
+      state: { error: String(e) },
+      boundingBox: { x: 0, y: 0, width: 0, height: 0 },
+    };
+  }
+}
+
 // Expose globally for page.evaluate() access
 if (import.meta.env.DEV) {
   (window as any).__agentSnapshot = captureAgentSnapshot;
+  (window as any).__agentSnapshotById = (id: string) => captureComponentSnapshot(id);
+  (window as any).__agentComponentIds = () => listRegisteredComponentIds();
   (window as any).__agentComponents = registeredComponents;
 }
 

@@ -24,6 +24,30 @@ import {
 
 const DEFAULT_LOCAL_STORAGE_KEY = "synthdefTS.nodeEditor.fullState.v2";
 const AGENT_CAPTURE_ID = "node-editor";
+const DESIGN_STYLE_PROPERTIES = [
+  "background-color",
+  "color",
+  "border-color",
+  "border-radius",
+  "box-shadow",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "line-height",
+  "padding",
+] as const;
+
+const DESIGN_STYLE_PROBES = [
+  '[data-agent-surface="root"]',
+  '[data-agent-surface="toolbar"]',
+  '[data-agent-surface="sidebar"]',
+  '[data-agent-surface="editor"]',
+  '[data-agent-surface="canvas"]',
+  ".btn-primary",
+  ".btn-secondary",
+  ".btn-ghost",
+  ".param-card",
+] as const;
 
 const props = withDefaults(
   defineProps<{
@@ -183,10 +207,14 @@ onMounted(() => {
       height: 0,
     };
 
+    const snapshot = getState();
     return {
       name: "NodeEditor",
       tagName: "node-editor-component",
-      state: getState(),
+      state: {
+        ...snapshot,
+        __design: captureDesignSnapshot(),
+      },
       boundingBox: {
         x: rect.x,
         y: rect.y,
@@ -211,6 +239,49 @@ function createEmptySnapshot(): NodeEditorStateSnapshot {
     connections: [],
     paramCount: 0,
     ugenCount: 0,
+  };
+}
+
+function extractComputedStyles(element: Element): Record<string, string> {
+  const styles = window.getComputedStyle(element);
+  const result: Record<string, string> = {};
+  for (const property of DESIGN_STYLE_PROPERTIES) {
+    result[property] = styles.getPropertyValue(property).trim();
+  }
+  return result;
+}
+
+function captureDesignSnapshot() {
+  const root = editorContainer.value;
+  if (!root || typeof window === "undefined") {
+    return {
+      probes: [],
+      viewport: { width: 0, height: 0 },
+      ui: { sidebarOpen: sidebarOpen.value, quickAddOpen: quickAddOpen.value },
+    };
+  }
+
+  const probes = DESIGN_STYLE_PROBES.map((selector) => {
+    const element = root.querySelector(selector);
+    return {
+      selector,
+      found: element !== null,
+      styles: element ? extractComputedStyles(element) : {},
+    };
+  });
+
+  return {
+    probes,
+    viewport: {
+      width: root.clientWidth,
+      height: root.clientHeight,
+    },
+    ui: {
+      sidebarOpen: sidebarOpen.value,
+      quickAddOpen: quickAddOpen.value,
+      filteredNodeTypeCount: filteredNodeTypeOptions.value.length,
+      quickAddNodeTypeCount: quickAddNodeTypeOptions.value.length,
+    },
   };
 }
 
@@ -764,8 +835,14 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="editorContainer" class="node-editor-root" :style="containerStyle">
-    <header class="toolbar">
+  <div
+    ref="editorContainer"
+    class="node-editor-root"
+    :style="containerStyle"
+    data-agent-component="node-editor"
+    data-agent-surface="root"
+  >
+    <header class="toolbar" data-agent-surface="toolbar">
       <h1 class="title">SynthDef Editor</h1>
       <div class="toolbar-controls">
         <label class="name-label">
@@ -852,7 +929,7 @@ defineExpose({
       </div>
     </header>
     <div class="main-area">
-      <aside v-if="sidebarOpen" class="sidebar">
+      <aside v-if="sidebarOpen" class="sidebar" data-agent-surface="sidebar">
         <div class="sidebar-header">
           <h2 class="sidebar-title">Parameters</h2>
           <button class="btn btn-small btn-primary" @click="addParam">
@@ -898,9 +975,14 @@ defineExpose({
       <div
         ref="editorPane"
         class="editor-container"
+        data-agent-surface="editor"
         @contextmenu="onEditorContextMenu"
       >
-        <div ref="reteCanvas" class="rete-editor-canvas" />
+        <div
+          ref="reteCanvas"
+          class="rete-editor-canvas"
+          data-agent-surface="canvas"
+        />
         <div
           v-if="quickAddOpen"
           class="quick-add-overlay"

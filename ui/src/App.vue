@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import AgentTestHarness from "./AgentTestHarness.vue";
 import NodeEditorRoot from "./nodeEditor/NodeEditorRoot.vue";
+
+const isAgentTestHarness =
+  typeof window !== "undefined" &&
+  (window.location.pathname === "/test-harness" ||
+    window.location.pathname.startsWith("/test-harness/"));
 </script>
 
 <template>
-  <NodeEditorRoot />
+  <AgentTestHarness v-if="isAgentTestHarness" />
+  <NodeEditorRoot v-else />
 </template>
 
 <style>

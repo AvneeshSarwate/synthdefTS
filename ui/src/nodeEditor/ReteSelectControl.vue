@@ -21,6 +21,7 @@ function onChange(event: Event) {
     class="rete-select-control"
     :value="data.value"
     :disabled="data.readonly"
+    @pointerdown.stop
     @change="onChange"
   >
     <option v-for="option in data.options" :key="option" :value="option">

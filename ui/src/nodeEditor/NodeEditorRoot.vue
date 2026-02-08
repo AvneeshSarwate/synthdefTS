@@ -610,6 +610,21 @@ async function redo() {
   await commandStack.redo();
 }
 
+async function removeSelectedNodes() {
+  const activeSession = editorSession.value;
+  if (!activeSession) {
+    return;
+  }
+
+  const removedCount = await activeSession.removeSelectedNodes();
+  if (removedCount === 0) {
+    showStatus("Select one or more nodes, then click Delete", "info");
+    return;
+  }
+
+  showStatus(`Deleted ${removedCount} node${removedCount === 1 ? "" : "s"}`, "success");
+}
+
 function getState() {
   const activeSession = editorSession.value;
   if (!activeSession) {
@@ -827,6 +842,7 @@ defineExpose({
   redo,
   canUndo: () => commandStack.canUndo(),
   canRedo: () => commandStack.canRedo(),
+  removeSelectedNodes,
   downloadBinary,
   downloadTypeScript,
   downloadGraphJSON,
@@ -860,6 +876,7 @@ defineExpose({
         <div class="toolbar-group">
           <button class="tb" :disabled="!canUndoState" @click="undo" title="Undo (Cmd+Z)">Undo</button>
           <button class="tb" :disabled="!canRedoState" @click="redo" title="Redo (Cmd+Shift+Z)">Redo</button>
+          <button class="tb" @click="removeSelectedNodes" title="Delete selected nodes">Delete Selected</button>
         </div>
 
         <span class="toolbar-sep" />
@@ -1436,18 +1453,5 @@ defineExpose({
   color: #555568;
   text-align: center;
   padding: 8px 4px;
-}
-
-/* ── Rete.js Connection Overrides ────────────────────── */
-
-:deep(svg[data-testid="connection"] path) {
-  stroke: rgba(108, 140, 255, 0.3);
-  stroke-width: 1.5px;
-  fill: none;
-}
-
-:deep(svg[data-testid="connection"]:hover path) {
-  stroke: rgba(108, 140, 255, 0.65);
-  stroke-width: 2px;
 }
 </style>

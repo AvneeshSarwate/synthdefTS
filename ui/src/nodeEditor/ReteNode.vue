@@ -1,9 +1,11 @@
 <script lang="ts">
 import { Ref } from "rete-vue-plugin";
 
-function sortByIndex(
-  entries: [string, { index?: number }][]
-): [string, any][] {
+interface Indexed {
+  index?: number;
+}
+
+function sortByIndex<T extends Indexed>(entries: [string, T][]): [string, T][] {
   entries.sort(
     (a, b) => ((a[1] && a[1].index) || 0) - ((b[1] && b[1].index) || 0)
   );
@@ -19,6 +21,9 @@ export default {
         width: Number.isFinite(this.data.width)
           ? `${this.data.width}px`
           : "140px",
+        height: Number.isFinite(this.data.height)
+          ? `${this.data.height}px`
+          : undefined,
       };
     },
     inputs() {

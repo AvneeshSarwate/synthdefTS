@@ -21,6 +21,7 @@ import type {
   NodeEditorGraphStateConnection,
   NodeEditorGraphStateNode,
 } from "./graphTypes";
+import ReteConnection from "./ReteConnection.vue";
 import ReteSelectControl from "./ReteSelectControl.vue";
 import ReteNode from "./ReteNode.vue";
 import ReteSocket from "./ReteSocket.vue";
@@ -717,10 +718,12 @@ export interface ParamNodeSummary {
 export interface ReteEditorSession {
   listNodeTypes(): ReteNodeTypeOption[];
   getParamSummary(): ParamNodeSummary[];
+  getSelectedNodeIds(): string[];
   addNode(type: string, options?: AddNodeOptions): Promise<SynthNode | null>;
   toGraphPosition(clientX: number, clientY: number): { x: number; y: number };
   addParam(): Promise<void>;
   removeNode(nodeId: string): Promise<boolean>;
+  removeSelectedNodes(): Promise<number>;
   focusNode(nodeId: string): Promise<void>;
   setNodeInputValue(nodeId: string, key: string, value: unknown): Promise<boolean>;
   getGraphModel(): NodeEditorGraphModel;
@@ -776,11 +779,14 @@ export async function createReteEditorSession(
   render.addPreset(
     VuePresets.classic.setup({
       customize: {
+        connection() {
+          return ReteConnection;
+        },
         node() {
-          return ReteNode as any;
+          return ReteNode;
         },
         socket() {
-          return ReteSocket as any;
+          return ReteSocket;
         },
         control(context) {
           if (context.payload instanceof SelectControl) {
@@ -809,7 +815,41 @@ export async function createReteEditorSession(
     accumulating,
   });
 
+  let graphChangeBatchDepth = 0;
+  let batchedGraphChangeLabel: string | null = null;
+  let batchedGraphChangePriority = -1;
+
+  const flushBatchedGraphChange = () => {
+    if (!batchedGraphChangeLabel) {
+      return;
+    }
+    const label = batchedGraphChangeLabel;
+    const priority = batchedGraphChangePriority;
+    batchedGraphChangeLabel = null;
+    batchedGraphChangePriority = -1;
+    options.onGraphChange?.(label, priority);
+  };
+
+  const withGraphChangeBatch = async <T>(action: () => Promise<T>): Promise<T> => {
+    graphChangeBatchDepth += 1;
+    try {
+      return await action();
+    } finally {
+      graphChangeBatchDepth -= 1;
+      if (graphChangeBatchDepth === 0) {
+        flushBatchedGraphChange();
+      }
+    }
+  };
+
   const notifyGraphChange = (label: string, priority = 0) => {
+    if (graphChangeBatchDepth > 0) {
+      if (priority >= batchedGraphChangePriority) {
+        batchedGraphChangeLabel = label;
+        batchedGraphChangePriority = priority;
+      }
+      return;
+    }
     options.onGraphChange?.(label, priority);
   };
 
@@ -979,6 +1019,11 @@ export async function createReteEditorSession(
         rate: String(node.getInputValue("rate") ?? "control"),
       }));
 
+  const getSelectedNodeIds = (): string[] =>
+    Array.from(selector.entities.values())
+      .filter((entity) => entity.label === "node")
+      .map((entity) => entity.id);
+
   const addParam = async (): Promise<void> => {
     const existing = getParamSummary();
     const paramIndex = existing.length;
@@ -994,11 +1039,40 @@ export async function createReteEditorSession(
   };
 
   const removeNode = async (nodeId: string): Promise<boolean> => {
-    const node = getNode(nodeId);
-    if (!node) {
-      return false;
-    }
-    return editor.removeNode(nodeId);
+    return withGraphChangeBatch(async () => {
+      const node = getNode(nodeId);
+      if (!node) {
+        return false;
+      }
+
+      const attachedConnectionIds = editor
+        .getConnections()
+        .filter((connectionModel) => {
+          return connectionModel.source === nodeId || connectionModel.target === nodeId;
+        })
+        .map((connectionModel) => connectionModel.id);
+
+      for (const connectionId of attachedConnectionIds) {
+        await editor.removeConnection(connectionId);
+      }
+
+      await selectable.unselect(nodeId);
+      return editor.removeNode(nodeId);
+    });
+  };
+
+  const removeSelectedNodes = async (): Promise<number> => {
+    return withGraphChangeBatch(async () => {
+      const nodeIds = getSelectedNodeIds();
+      let removedCount = 0;
+      for (const nodeId of nodeIds) {
+        const removed = await removeNode(nodeId);
+        if (removed) {
+          removedCount += 1;
+        }
+      }
+      return removedCount;
+    });
   };
 
   const focusNode = async (nodeId: string): Promise<void> => {
@@ -1208,10 +1282,12 @@ export async function createReteEditorSession(
   return {
     listNodeTypes,
     getParamSummary,
+    getSelectedNodeIds,
     addNode,
     toGraphPosition,
     addParam,
     removeNode,
+    removeSelectedNodes,
     focusNode,
     setNodeInputValue,
     getGraphModel,

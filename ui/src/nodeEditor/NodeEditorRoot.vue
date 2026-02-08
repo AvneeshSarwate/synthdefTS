@@ -1437,4 +1437,17 @@ defineExpose({
   text-align: center;
   padding: 8px 4px;
 }
+
+/* ── Rete.js Connection Overrides ────────────────────── */
+
+:deep(svg[data-testid="connection"] path) {
+  stroke: rgba(108, 140, 255, 0.3);
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+:deep(svg[data-testid="connection"]:hover path) {
+  stroke: rgba(108, 140, 255, 0.65);
+  stroke-width: 2px;
+}
 </style>

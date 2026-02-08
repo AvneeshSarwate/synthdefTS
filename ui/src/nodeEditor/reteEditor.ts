@@ -22,6 +22,8 @@ import type {
   NodeEditorGraphStateNode,
 } from "./graphTypes";
 import ReteSelectControl from "./ReteSelectControl.vue";
+import ReteNode from "./ReteNode.vue";
+import ReteSocket from "./ReteSocket.vue";
 
 interface NodeInputSpec {
   key: string;
@@ -505,6 +507,7 @@ function getControlValue(control: InputLikeControl | null): unknown {
 class SynthNode extends ClassicPreset.Node {
   readonly type: string;
   readonly spec: NodeTypeSpec;
+  width = 140;
 
   constructor(
     spec: NodeTypeSpec,
@@ -773,6 +776,12 @@ export async function createReteEditorSession(
   render.addPreset(
     VuePresets.classic.setup({
       customize: {
+        node() {
+          return ReteNode as any;
+        },
+        socket() {
+          return ReteSocket as any;
+        },
         control(context) {
           if (context.payload instanceof SelectControl) {
             return ReteSelectControl;

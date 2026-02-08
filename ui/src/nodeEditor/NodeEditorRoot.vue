@@ -843,79 +843,74 @@ defineExpose({
     data-agent-surface="root"
   >
     <header class="toolbar" data-agent-surface="toolbar">
-      <h1 class="title">SynthDef Editor</h1>
-      <div class="toolbar-controls">
-        <label class="name-label">
-          Name:
+      <div class="toolbar-row">
+        <!-- Identity -->
+        <div class="toolbar-group">
+          <span class="title">SynthDef</span>
           <input
             v-model="synthDefName"
             class="name-input"
             placeholder="mySynthDef"
           />
-        </label>
+        </div>
 
-        <input
-          v-model="nodeTypeSearch"
-          class="node-search-input"
-          placeholder="Filter node types"
-        />
+        <span class="toolbar-sep" />
 
-        <select v-model="selectedNodeType" class="node-type-select">
-          <option
-            v-for="option in filteredNodeTypeOptions"
-            :key="option.type"
-            :value="option.type"
-          >
-            {{ option.category }} / {{ option.title }}
-          </option>
-        </select>
+        <!-- Edit -->
+        <div class="toolbar-group">
+          <button class="tb" :disabled="!canUndoState" @click="undo" title="Undo (Cmd+Z)">Undo</button>
+          <button class="tb" :disabled="!canRedoState" @click="redo" title="Redo (Cmd+Shift+Z)">Redo</button>
+        </div>
 
-        <button class="btn btn-small btn-primary" @click="addSelectedNode">
-          + Node
-        </button>
+        <span class="toolbar-sep" />
 
-        <button
-          class="btn btn-ghost"
-          :disabled="!canUndoState"
-          @click="undo"
-        >
-          Undo
-        </button>
-        <button
-          class="btn btn-ghost"
-          :disabled="!canRedoState"
-          @click="redo"
-        >
-          Redo
-        </button>
-        <button class="btn btn-ghost" @click="downloadGraphJSON">
-          Save Graph JSON
-        </button>
-        <button class="btn btn-ghost" @click="triggerGraphUpload">
-          Load Graph JSON
-        </button>
-        <button class="btn btn-ghost" @click="loadAutoSavedGraph">
-          Load Auto-save
-        </button>
-        <label class="autosave-label">
+        <!-- Add node -->
+        <div class="toolbar-group">
           <input
-            v-model="autoSaveEnabled"
-            type="checkbox"
+            v-model="nodeTypeSearch"
+            class="toolbar-input"
+            placeholder="Filter nodes"
           />
-          Auto-save
-        </label>
-        <button class="btn btn-primary" @click="downloadBinary">
-          Download .scsyndef
-        </button>
-        <button class="btn btn-secondary" @click="downloadTypeScript">
-          Download .ts
-        </button>
-        <button
-          class="btn btn-ghost"
-          @click="sidebarOpen = !sidebarOpen"
-        >
+          <select v-model="selectedNodeType" class="toolbar-select">
+            <option
+              v-for="option in filteredNodeTypeOptions"
+              :key="option.type"
+              :value="option.type"
+            >
+              {{ option.category }} / {{ option.title }}
+            </option>
+          </select>
+          <button class="tb tb-accent" @click="addSelectedNode">+ Node</button>
+        </div>
+
+        <span class="toolbar-sep" />
+
+        <!-- File -->
+        <div class="toolbar-group">
+          <button class="tb" @click="downloadGraphJSON" title="Save graph as JSON">Save</button>
+          <button class="tb" @click="triggerGraphUpload" title="Load graph JSON">Load</button>
+          <label class="autosave-label">
+            <input v-model="autoSaveEnabled" type="checkbox" />
+            Auto
+          </label>
+          <button class="tb" @click="loadAutoSavedGraph">Restore</button>
+        </div>
+
+        <span class="toolbar-sep" />
+
+        <!-- Export -->
+        <div class="toolbar-group">
+          <button class="tb tb-accent" @click="downloadBinary">.scsyndef</button>
+          <button class="tb" @click="downloadTypeScript">.ts</button>
+        </div>
+
+        <span class="toolbar-sep" />
+
+        <!-- View -->
+        <button class="tb" @click="sidebarOpen = !sidebarOpen">
           {{ sidebarOpen ? "Hide" : "Show" }} Params
         </button>
+
         <input
           ref="graphFileInput"
           class="file-input-hidden"
@@ -932,9 +927,7 @@ defineExpose({
       <aside v-if="sidebarOpen" class="sidebar" data-agent-surface="sidebar">
         <div class="sidebar-header">
           <h2 class="sidebar-title">Parameters</h2>
-          <button class="btn btn-small btn-primary" @click="addParam">
-            + Add
-          </button>
+          <button class="tb tb-accent" @click="addParam">+ Add</button>
         </div>
         <div class="param-list">
           <div
@@ -1019,162 +1012,189 @@ defineExpose({
 </template>
 
 <style scoped>
+/* ── Palette ───────────────────────────────────────────── */
+/* bg-0  #111118   deepest (canvas)                        */
+/* bg-1  #18181f   surfaces (toolbar, sidebar)              */
+/* bg-2  #222230   elevated (cards, inputs)                 */
+/* border #2a2a3a  subtle lines                             */
+/* fg-3  #555568   muted text                               */
+/* fg-2  #8888a0   secondary text                           */
+/* fg-1  #c0c0d0   primary text                             */
+/* accent #6c8cff  action blue                              */
+/* accent-h #8aa4ff hover blue                              */
+
 .node-editor-root {
   display: flex;
   flex-direction: column;
-  background: #1a1a2e;
-  color: #e0e0e0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #111118;
+  color: #c0c0d0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
 }
+
+/* ── Toolbar ───────────────────────────────────────────── */
 
 .toolbar {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 16px;
-  background: #16213e;
-  border-bottom: 1px solid #0f3460;
+  flex-direction: column;
+  background: #18181f;
+  border-bottom: 1px solid #2a2a3a;
   flex-shrink: 0;
   z-index: 100;
 }
 
-.title {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-  white-space: nowrap;
-  color: #e94560;
-}
-
-.toolbar-controls {
+.toolbar-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
+  padding: 4px 10px;
   flex-wrap: wrap;
 }
 
-.name-label {
+.toolbar-group {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #a0a0b8;
+  gap: 3px;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 18px;
+  background: #2a2a3a;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6c8cff;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .name-input {
-  padding: 4px 8px;
-  border: 1px solid #0f3460;
-  border-radius: 4px;
-  background: #1a1a2e;
-  color: #e0e0e0;
-  font-size: 13px;
-  width: 160px;
+  padding: 2px 6px;
+  border: 1px solid #2a2a3a;
+  border-radius: 3px;
+  background: #222230;
+  color: #c0c0d0;
+  font-size: 11px;
+  width: 120px;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
 }
 
 .name-input:focus {
   outline: none;
-  border-color: #e94560;
+  border-color: #6c8cff;
 }
 
-.node-search-input,
-.node-type-select {
-  padding: 4px 8px;
-  border: 1px solid #0f3460;
-  border-radius: 4px;
-  background: #1a1a2e;
-  color: #e0e0e0;
-  font-size: 12px;
-  min-width: 160px;
-}
+/* ── Toolbar buttons ─────────────────────────────────── */
 
-.node-search-input:focus,
-.node-type-select:focus {
-  outline: none;
-  border-color: #e94560;
-}
-
-.btn {
-  padding: 5px 12px;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
+.tb {
+  padding: 2px 8px;
+  border: 1px solid #2a2a3a;
+  border-radius: 3px;
+  background: transparent;
+  color: #8888a0;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+  line-height: 1.5;
+  font-family: inherit;
 }
 
-.btn:disabled {
-  opacity: 0.45;
+.tb:hover {
+  background: #222230;
+  color: #c0c0d0;
+  border-color: #3a3a4a;
+}
+
+.tb:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
-.btn-primary {
-  background: #e94560;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #d63851;
-}
-
-.btn-secondary {
-  background: #0f3460;
-  color: #a0c4ff;
-}
-
-.btn-secondary:hover {
-  background: #1a4a7a;
-}
-
-.btn-ghost {
+.tb:disabled:hover {
   background: transparent;
-  color: #a0a0b8;
-  border: 1px solid #333;
+  color: #8888a0;
+  border-color: #2a2a3a;
 }
 
-.btn-ghost:hover {
-  background: #222;
+.tb-accent {
+  background: #6c8cff;
+  color: #111118;
+  border-color: #6c8cff;
+  font-weight: 600;
 }
 
-.btn-small {
-  padding: 3px 8px;
+.tb-accent:hover {
+  background: #8aa4ff;
+  color: #111118;
+  border-color: #8aa4ff;
+}
+
+.toolbar-input,
+.toolbar-select {
+  padding: 2px 6px;
+  border: 1px solid #2a2a3a;
+  border-radius: 3px;
+  background: #222230;
+  color: #c0c0d0;
   font-size: 11px;
+  min-width: 100px;
+  font-family: inherit;
+}
+
+.toolbar-input:focus,
+.toolbar-select:focus {
+  outline: none;
+  border-color: #6c8cff;
 }
 
 .autosave-label {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: #a0a0b8;
+  gap: 3px;
+  font-size: 11px;
+  color: #555568;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.autosave-label input[type="checkbox"] {
+  margin: 0;
+  accent-color: #6c8cff;
 }
 
 .file-input-hidden {
   display: none;
 }
 
+/* ── Status ──────────────────────────────────────────── */
+
 .status {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
+  font-size: 11px;
+  padding: 2px 10px 3px;
+  border-top: 1px solid #2a2a3a;
 }
 
 .status.success {
-  background: #1b4332;
-  color: #95d5b2;
+  color: #6fcf97;
 }
 
 .status.error {
-  background: #6b0f1a;
-  color: #ffb3b3;
+  color: #f07070;
 }
 
 .status.info {
-  background: #1a1a2e;
-  color: #a0a0b8;
+  color: #555568;
 }
+
+/* ── Layout ──────────────────────────────────────────── */
 
 .main-area {
   flex: 1;
@@ -1182,11 +1202,13 @@ defineExpose({
   overflow: hidden;
 }
 
+/* ── Sidebar ─────────────────────────────────────────── */
+
 .sidebar {
-  width: 240px;
+  width: 180px;
   flex-shrink: 0;
-  background: #16213e;
-  border-right: 1px solid #0f3460;
+  background: #18181f;
+  border-right: 1px solid #2a2a3a;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1196,98 +1218,122 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
-  border-bottom: 1px solid #0f3460;
+  padding: 6px 8px;
+  border-bottom: 1px solid #2a2a3a;
 }
 
 .sidebar-title {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin: 0;
-  color: #a0c4ff;
+  color: #555568;
+}
+
+.sidebar-header .btn-small {
+  padding: 0;
+  border: 0;
+  background: 0;
+}
+
+.sidebar-header .tb {
+  padding: 1px 6px;
+  font-size: 10px;
 }
 
 .param-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 4px;
 }
 
 .param-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
-  margin-bottom: 4px;
-  background: #1a1a2e;
-  border: 1px solid #0f3460;
-  border-radius: 4px;
+  padding: 3px 6px;
+  margin-bottom: 1px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: background 0.1s;
 }
 
 .param-card:hover {
-  border-color: #e94560;
+  background: #222230;
+  border-color: #2a2a3a;
 }
 
 .param-info {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
+  align-items: baseline;
+  gap: 6px;
   min-width: 0;
+  flex: 1;
 }
 
 .param-name-input {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  color: #e0e0e0;
+  color: #c0c0d0;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 2px;
-  padding: 1px 3px;
+  padding: 0 2px;
   width: 100%;
   min-width: 0;
   outline: none;
-  font-family: inherit;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
 }
 
 .param-name-input:hover {
-  border-color: #333;
+  border-color: #2a2a3a;
 }
 
 .param-name-input:focus {
-  border-color: #e94560;
-  background: #1a1a2e;
+  border-color: #6c8cff;
+  background: #222230;
 }
 
 .param-meta {
-  font-size: 10px;
-  color: #6b7280;
+  font-size: 9px;
+  color: #555568;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .param-remove {
   background: none;
   border: none;
-  color: #6b7280;
+  color: #555568;
   cursor: pointer;
-  font-size: 14px;
-  padding: 2px 4px;
+  font-size: 12px;
+  padding: 0 3px;
   border-radius: 2px;
   line-height: 1;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.param-card:hover .param-remove {
+  opacity: 1;
 }
 
 .param-remove:hover {
-  color: #e94560;
-  background: #2a1a2e;
+  color: #f07070;
 }
 
 .param-empty {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 10px;
+  color: #555568;
   text-align: center;
-  padding: 20px 10px;
+  padding: 16px 8px;
   line-height: 1.6;
 }
+
+/* ── Editor ──────────────────────────────────────────── */
 
 .editor-container {
   flex: 1;
@@ -1300,6 +1346,8 @@ defineExpose({
   height: 100%;
 }
 
+/* ── Quick-add palette ───────────────────────────────── */
+
 .quick-add-overlay {
   position: absolute;
   inset: 0;
@@ -1308,83 +1356,85 @@ defineExpose({
 
 .quick-add-menu {
   position: absolute;
-  width: 320px;
-  max-width: calc(100% - 16px);
-  max-height: min(420px, calc(100% - 16px));
-  background: #111827;
-  border: 1px solid #2b3346;
-  border-radius: 8px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-  padding: 10px;
+  width: 260px;
+  max-width: calc(100% - 12px);
+  max-height: min(360px, calc(100% - 12px));
+  background: #18181f;
+  border: 1px solid #2a2a3a;
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .quick-add-header {
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 10px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #555568;
+  font-weight: 700;
 }
 
 .quick-add-search {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #374151;
-  border-radius: 6px;
-  background: #0f172a;
-  color: #e5e7eb;
-  font-size: 12px;
-  padding: 6px 8px;
+  border: 1px solid #2a2a3a;
+  border-radius: 3px;
+  background: #222230;
+  color: #c0c0d0;
+  font-size: 11px;
+  padding: 4px 6px;
+  font-family: inherit;
 }
 
 .quick-add-search:focus {
   outline: none;
-  border-color: #4f6df5;
+  border-color: #6c8cff;
 }
 
 .quick-add-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
   overflow-y: auto;
 }
 
 .quick-add-item {
   width: 100%;
-  border: 1px solid #273247;
-  border-radius: 6px;
-  background: #111c31;
-  color: #dbe2f4;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #c0c0d0;
   cursor: pointer;
-  padding: 6px 8px;
+  padding: 4px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   text-align: left;
+  font-family: inherit;
 }
 
 .quick-add-item:hover {
-  border-color: #4368f8;
-  background: #172543;
+  background: #222230;
 }
 
 .quick-add-type {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .quick-add-category {
-  font-size: 10px;
-  color: #9fb0d6;
+  font-size: 9px;
+  color: #555568;
 }
 
 .quick-add-empty {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 10px;
+  color: #555568;
   text-align: center;
-  padding: 10px 6px;
+  padding: 8px 4px;
 }
 </style>

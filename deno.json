@@ -3,6 +3,8 @@
     "test": "deno test --allow-read --allow-write",
     "gen:fixtures": "/Applications/SuperCollider.app/Contents/MacOS/sclang scripts/generate-fixtures.scd",
     "codegen": "deno run --allow-read --allow-write codegen/run.ts",
+    "codegen:docs": "deno run --allow-read --allow-write codegen/run-docs.ts",
+    "triage:docs": "deno run --allow-read --allow-write codegen/triage-docs.ts",
     "play": "deno run --allow-net --allow-read tests/play.ts",
     "grainChordLerp": "deno run --allow-net --allow-read tests/grainChordLerp.ts",
     "ui": "cd ui && deno run -A npm:vite"

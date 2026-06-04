@@ -879,10 +879,29 @@ export async function createReteEditorSession(
     return context;
   });
 
+  const nodesBeingDragged = new Set<string>();
+
   area.addPipe((context) => {
-    if (context.type === "nodedragged") {
-      notifyGraphChange("Move Node", 20);
+    if (context.type === "nodepicked") {
+      nodesBeingDragged.add(context.data.id);
+      return context;
     }
+
+    if (context.type === "nodetranslated") {
+      // Ignore high-frequency translate events during pointer drag;
+      // we record once on "nodedragged" instead.
+      if (!nodesBeingDragged.has(context.data.id)) {
+        notifyGraphChange("Move Node", 20);
+      }
+      return context;
+    }
+
+    if (context.type === "nodedragged") {
+      nodesBeingDragged.delete(context.data.id);
+      notifyGraphChange("Move Node", 20);
+      return context;
+    }
+
     return context;
   });
 
@@ -935,47 +954,49 @@ export async function createReteEditorSession(
     type: string,
     nodeOptions: AddNodeOptions = {}
   ): Promise<SynthNode | null> => {
-    const spec = NODE_SPEC_MAP.get(type);
-    if (!spec) {
-      return null;
-    }
-
-    const node = new SynthNode(spec, onInputChange);
-
-    if (nodeOptions.id) {
-      node.id = nodeOptions.id;
-    }
-    if (nodeOptions.title) {
-      node.title = nodeOptions.title;
-    }
-
-    const inputValues = nodeOptions.inputs ?? {};
-    for (const [key, value] of Object.entries(inputValues)) {
-      node.setInputValue(key, value, false);
-    }
-
-    const added = await editor.addNode(node);
-    if (!added) {
-      return null;
-    }
-
-    if (nodeOptions.inputIds) {
-      for (const [key, id] of Object.entries(nodeOptions.inputIds)) {
-        node.setInputId(key, id);
+    return withGraphChangeBatch(async () => {
+      const spec = NODE_SPEC_MAP.get(type);
+      if (!spec) {
+        return null;
       }
-    }
 
-    if (nodeOptions.outputIds) {
-      for (const [key, id] of Object.entries(nodeOptions.outputIds)) {
-        node.setOutputId(key, id);
+      const node = new SynthNode(spec, onInputChange);
+
+      if (nodeOptions.id) {
+        node.id = nodeOptions.id;
       }
-    }
+      if (nodeOptions.title) {
+        node.title = nodeOptions.title;
+      }
 
-    const position = nodeOptions.position ?? defaultPosition();
-    await area.translate(node.id, position);
-    await area.update("node", node.id);
+      const inputValues = nodeOptions.inputs ?? {};
+      for (const [key, value] of Object.entries(inputValues)) {
+        node.setInputValue(key, value, false);
+      }
 
-    return node;
+      const added = await editor.addNode(node);
+      if (!added) {
+        return null;
+      }
+
+      if (nodeOptions.inputIds) {
+        for (const [key, id] of Object.entries(nodeOptions.inputIds)) {
+          node.setInputId(key, id);
+        }
+      }
+
+      if (nodeOptions.outputIds) {
+        for (const [key, id] of Object.entries(nodeOptions.outputIds)) {
+          node.setOutputId(key, id);
+        }
+      }
+
+      const position = nodeOptions.position ?? defaultPosition();
+      await area.translate(node.id, position);
+      await area.update("node", node.id);
+
+      return node;
+    });
   };
 
   const addConnectionByState = async (

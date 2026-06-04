@@ -1,0 +1,4006 @@
+{
+  "config": {
+    "sweetMin": 100,
+    "sweetMax": 700,
+    "simpleMaxParams": 2
+  },
+  "total": 399,
+  "counts": {
+    "mechanical": 228,
+    "keep-summary": 62,
+    "ai-distill": 28,
+    "ai-from-source": 81
+  },
+  "ugens": [
+    {
+      "name": "A2K",
+      "descLen": 63,
+      "paramCount": 1,
+      "category": "UGens>Conversion",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Conversion)"
+    },
+    {
+      "name": "AccelerometerX",
+      "descLen": 0,
+      "paramCount": 4,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "AccelerometerY",
+      "descLen": 0,
+      "paramCount": 4,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "AccelerometerZ",
+      "descLen": 0,
+      "paramCount": 4,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "AllpassC",
+      "descLen": 514,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (514 chars)"
+    },
+    {
+      "name": "AllpassL",
+      "descLen": 513,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (513 chars)"
+    },
+    {
+      "name": "AllpassN",
+      "descLen": 632,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (632 chars)"
+    },
+    {
+      "name": "AmpComp",
+      "descLen": 159,
+      "paramCount": 3,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (159 chars)"
+    },
+    {
+      "name": "AmpCompA",
+      "descLen": 645,
+      "paramCount": 4,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (645 chars)"
+    },
+    {
+      "name": "Amplitude",
+      "descLen": 244,
+      "paramCount": 3,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (244 chars)"
+    },
+    {
+      "name": "AnalogIn",
+      "descLen": 119,
+      "paramCount": 1,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (119 chars)"
+    },
+    {
+      "name": "AnalogOut",
+      "descLen": 95,
+      "paramCount": 2,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Bela)"
+    },
+    {
+      "name": "APF",
+      "descLen": 23,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (23 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "Balance2",
+      "descLen": 464,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (464 chars)"
+    },
+    {
+      "name": "Ball",
+      "descLen": 83,
+      "paramCount": 4,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PhysicalModelingUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (83 chars) + 4 params / UGens>Filters>Nonlinear — read C++"
+    },
+    {
+      "name": "BAllPass",
+      "descLen": 404,
+      "paramCount": 3,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BBandPass",
+      "descLen": 404,
+      "paramCount": 3,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BBandStop",
+      "descLen": 404,
+      "paramCount": 3,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BeatTrack",
+      "descLen": 1028,
+      "paramCount": 2,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BeatTrack.cpp",
+      "action": "ai-distill",
+      "note": "long description (1028 chars)"
+    },
+    {
+      "name": "BeatTrack2",
+      "descLen": 1144,
+      "paramCount": 6,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BeatTrack2.cpp",
+      "action": "ai-distill",
+      "note": "long description (1144 chars)"
+    },
+    {
+      "name": "BelaScopeOut",
+      "descLen": 256,
+      "paramCount": 2,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (256 chars)"
+    },
+    {
+      "name": "BHiPass",
+      "descLen": 404,
+      "paramCount": 3,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BHiShelf",
+      "descLen": 404,
+      "paramCount": 4,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BiPanB2",
+      "descLen": 269,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Ambisonics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (269 chars)"
+    },
+    {
+      "name": "Blip",
+      "descLen": 663,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (663 chars)"
+    },
+    {
+      "name": "BlockSize",
+      "descLen": 0,
+      "paramCount": 0,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "BLowPass",
+      "descLen": 404,
+      "paramCount": 3,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BLowShelf",
+      "descLen": 404,
+      "paramCount": 4,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BPeakEQ",
+      "descLen": 404,
+      "paramCount": 4,
+      "category": "UGens>Filters>BEQSuite",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "BPF",
+      "descLen": 32,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (32 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "BPZ2",
+      "descLen": 143,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (143 chars)"
+    },
+    {
+      "name": "BRF",
+      "descLen": 34,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (34 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "BrownNoise",
+      "descLen": 69,
+      "paramCount": 0,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "BRZ2",
+      "descLen": 158,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (158 chars)"
+    },
+    {
+      "name": "BufAllpassC",
+      "descLen": 274,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (274 chars)"
+    },
+    {
+      "name": "BufAllpassL",
+      "descLen": 274,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (274 chars)"
+    },
+    {
+      "name": "BufAllpassN",
+      "descLen": 274,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (274 chars)"
+    },
+    {
+      "name": "BufChannels",
+      "descLen": 48,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Buffer>Info)"
+    },
+    {
+      "name": "BufCombC",
+      "descLen": 264,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (264 chars)"
+    },
+    {
+      "name": "BufCombL",
+      "descLen": 264,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (264 chars)"
+    },
+    {
+      "name": "BufCombN",
+      "descLen": 264,
+      "paramCount": 4,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (264 chars)"
+    },
+    {
+      "name": "BufDelayC",
+      "descLen": 268,
+      "paramCount": 3,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (268 chars)"
+    },
+    {
+      "name": "BufDelayL",
+      "descLen": 268,
+      "paramCount": 3,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (268 chars)"
+    },
+    {
+      "name": "BufDelayN",
+      "descLen": 268,
+      "paramCount": 3,
+      "category": "UGens>Delays>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (268 chars)"
+    },
+    {
+      "name": "BufDur",
+      "descLen": 38,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Buffer>Info)"
+    },
+    {
+      "name": "BufFrames",
+      "descLen": 43,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Buffer>Info)"
+    },
+    {
+      "name": "BufInfoUGenBase",
+      "descLen": 57,
+      "paramCount": 1,
+      "category": "UGens>Base",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Base)"
+    },
+    {
+      "name": "BufRateScale",
+      "descLen": 69,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Buffer>Info)"
+    },
+    {
+      "name": "BufRd",
+      "descLen": 232,
+      "paramCount": 5,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (232 chars)"
+    },
+    {
+      "name": "BufSampleRate",
+      "descLen": 41,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Buffer>Info)"
+    },
+    {
+      "name": "BufSamples",
+      "descLen": 257,
+      "paramCount": 1,
+      "category": "UGens>Buffer>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (257 chars)"
+    },
+    {
+      "name": "BufWr",
+      "descLen": 128,
+      "paramCount": 4,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (128 chars)"
+    },
+    {
+      "name": "Changed",
+      "descLen": 30,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Triggers)"
+    },
+    {
+      "name": "CheckBadValues",
+      "descLen": 199,
+      "paramCount": 3,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TestUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (199 chars)"
+    },
+    {
+      "name": "ClearBuf",
+      "descLen": 0,
+      "paramCount": 1,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "Clip",
+      "descLen": 99,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (99 chars) + 3 params / UGens>Maths — read C++"
+    },
+    {
+      "name": "ClipNoise",
+      "descLen": 119,
+      "paramCount": 0,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (119 chars)"
+    },
+    {
+      "name": "CoinGate",
+      "descLen": 92,
+      "paramCount": 2,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "CombC",
+      "descLen": 338,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (338 chars)"
+    },
+    {
+      "name": "CombL",
+      "descLen": 338,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (338 chars)"
+    },
+    {
+      "name": "CombN",
+      "descLen": 657,
+      "paramCount": 4,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (657 chars)"
+    },
+    {
+      "name": "Compander",
+      "descLen": 47,
+      "paramCount": 7,
+      "category": "UGens>Dynamics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (47 chars) + 7 params / UGens>Dynamics — read C++"
+    },
+    {
+      "name": "CompanderD",
+      "descLen": 179,
+      "paramCount": 6,
+      "category": "UGens>Dynamics",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (179 chars)"
+    },
+    {
+      "name": "ControlDur",
+      "descLen": 91,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "ControlRate",
+      "descLen": 43,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "Convolution",
+      "descLen": 259,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Convolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (259 chars)"
+    },
+    {
+      "name": "Convolution2",
+      "descLen": 352,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Convolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (352 chars)"
+    },
+    {
+      "name": "Convolution2L",
+      "descLen": 274,
+      "paramCount": 5,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Convolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (274 chars)"
+    },
+    {
+      "name": "Convolution3",
+      "descLen": 353,
+      "paramCount": 4,
+      "category": "UGens>Convolution",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Convolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (353 chars)"
+    },
+    {
+      "name": "COsc",
+      "descLen": 187,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (187 chars)"
+    },
+    {
+      "name": "Crackle",
+      "descLen": 46,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "CuspL",
+      "descLen": 228,
+      "paramCount": 4,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (228 chars)"
+    },
+    {
+      "name": "CuspN",
+      "descLen": 225,
+      "paramCount": 4,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (225 chars)"
+    },
+    {
+      "name": "Dbrown",
+      "descLen": 209,
+      "paramCount": 4,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (209 chars)"
+    },
+    {
+      "name": "Dbufrd",
+      "descLen": 0,
+      "paramCount": 3,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 3 params / UGens>Buffer — read C++"
+    },
+    {
+      "name": "Dbufwr",
+      "descLen": 0,
+      "paramCount": 4,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 4 params / UGens>Buffer — read C++"
+    },
+    {
+      "name": "DC",
+      "descLen": 55,
+      "paramCount": 1,
+      "category": "UGens>Generators>Single-value",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Generators>Single-value)"
+    },
+    {
+      "name": "Dconst",
+      "descLen": 247,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (247 chars)"
+    },
+    {
+      "name": "Ddup",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 2 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Decay",
+      "descLen": 331,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (331 chars)"
+    },
+    {
+      "name": "Decay2",
+      "descLen": 386,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (386 chars)"
+    },
+    {
+      "name": "DecodeB2",
+      "descLen": 203,
+      "paramCount": 5,
+      "category": "UGens>Multichannel>Ambisonics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (203 chars)"
+    },
+    {
+      "name": "DegreeToKey",
+      "descLen": 183,
+      "paramCount": 3,
+      "category": "UGens>Conversion",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (183 chars)"
+    },
+    {
+      "name": "Delay1",
+      "descLen": 54,
+      "paramCount": 2,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Delays)"
+    },
+    {
+      "name": "Delay2",
+      "descLen": 32,
+      "paramCount": 3,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (32 chars) + 3 params / UGens>Delays — read C++"
+    },
+    {
+      "name": "DelayC",
+      "descLen": 350,
+      "paramCount": 3,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (350 chars)"
+    },
+    {
+      "name": "DelayL",
+      "descLen": 350,
+      "paramCount": 3,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (350 chars)"
+    },
+    {
+      "name": "DelayN",
+      "descLen": 585,
+      "paramCount": 3,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (585 chars)"
+    },
+    {
+      "name": "DelTapRd",
+      "descLen": 349,
+      "paramCount": 4,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (349 chars)"
+    },
+    {
+      "name": "DelTapWr",
+      "descLen": 350,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (350 chars)"
+    },
+    {
+      "name": "Demand",
+      "descLen": 243,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (243 chars)"
+    },
+    {
+      "name": "DemandEnvGen",
+      "descLen": 145,
+      "paramCount": 10,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (145 chars)"
+    },
+    {
+      "name": "DetectIndex",
+      "descLen": 411,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (411 chars)"
+    },
+    {
+      "name": "DetectSilence",
+      "descLen": 904,
+      "paramCount": 4,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (904 chars)"
+    },
+    {
+      "name": "Dgeom",
+      "descLen": 82,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (82 chars) + 3 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dibrown",
+      "descLen": 209,
+      "paramCount": 4,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (209 chars)"
+    },
+    {
+      "name": "DigitalIn",
+      "descLen": 193,
+      "paramCount": 1,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (193 chars)"
+    },
+    {
+      "name": "DigitalIO",
+      "descLen": 300,
+      "paramCount": 3,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (300 chars)"
+    },
+    {
+      "name": "DigitalOut",
+      "descLen": 192,
+      "paramCount": 2,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (192 chars)"
+    },
+    {
+      "name": "DiskIn",
+      "descLen": 210,
+      "paramCount": 3,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DiskIO_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (210 chars)"
+    },
+    {
+      "name": "DiskOut",
+      "descLen": 1274,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DiskIO_UGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (1274 chars)"
+    },
+    {
+      "name": "Diwhite",
+      "descLen": 210,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (210 chars)"
+    },
+    {
+      "name": "Done",
+      "descLen": 2329,
+      "paramCount": 1,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (2329 chars)"
+    },
+    {
+      "name": "Dpoll",
+      "descLen": 168,
+      "paramCount": 4,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (168 chars)"
+    },
+    {
+      "name": "Drand",
+      "descLen": 133,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (133 chars)"
+    },
+    {
+      "name": "Dreset",
+      "descLen": 204,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (204 chars)"
+    },
+    {
+      "name": "Dseq",
+      "descLen": 78,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (78 chars) + 2 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dser",
+      "descLen": 78,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (78 chars) + 2 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dseries",
+      "descLen": 85,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (85 chars) + 3 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dshuf",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 2 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dstutter",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 2 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dswitch",
+      "descLen": 169,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (169 chars)"
+    },
+    {
+      "name": "Dswitch1",
+      "descLen": 102,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (102 chars)"
+    },
+    {
+      "name": "Dunique",
+      "descLen": 782,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "ai-distill",
+      "note": "long description (782 chars)"
+    },
+    {
+      "name": "Dust",
+      "descLen": 39,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "Dust2",
+      "descLen": 40,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "Duty",
+      "descLen": 339,
+      "paramCount": 4,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (339 chars)"
+    },
+    {
+      "name": "Dwhite",
+      "descLen": 210,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (210 chars)"
+    },
+    {
+      "name": "Dwrand",
+      "descLen": 0,
+      "paramCount": 3,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 3 params / UGens>Demand — read C++"
+    },
+    {
+      "name": "Dxrand",
+      "descLen": 134,
+      "paramCount": 2,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (134 chars)"
+    },
+    {
+      "name": "DynKlang",
+      "descLen": 265,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (265 chars)"
+    },
+    {
+      "name": "DynKlank",
+      "descLen": 474,
+      "paramCount": 5,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (474 chars)"
+    },
+    {
+      "name": "EnvGen",
+      "descLen": 368,
+      "paramCount": 6,
+      "category": "UGens>Envelopes",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (368 chars)"
+    },
+    {
+      "name": "ExpRand",
+      "descLen": 204,
+      "paramCount": 2,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (204 chars)"
+    },
+    {
+      "name": "FBSineC",
+      "descLen": 471,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (471 chars)"
+    },
+    {
+      "name": "FBSineL",
+      "descLen": 472,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (472 chars)"
+    },
+    {
+      "name": "FBSineN",
+      "descLen": 469,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (469 chars)"
+    },
+    {
+      "name": "FFT",
+      "descLen": 929,
+      "paramCount": 6,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FFT_UGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (929 chars)"
+    },
+    {
+      "name": "FFTTrigger",
+      "descLen": 0,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FFT_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 3 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "Fold",
+      "descLen": 94,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (94 chars) + 3 params / UGens>Maths — read C++"
+    },
+    {
+      "name": "FoldIndex",
+      "descLen": 151,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (151 chars)"
+    },
+    {
+      "name": "Formant",
+      "descLen": 89,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (89 chars) + 3 params / UGens>Generators>Deterministic — read C++"
+    },
+    {
+      "name": "Formlet",
+      "descLen": 606,
+      "paramCount": 4,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (606 chars)"
+    },
+    {
+      "name": "FOS",
+      "descLen": 193,
+      "paramCount": 4,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (193 chars)"
+    },
+    {
+      "name": "Free",
+      "descLen": 29,
+      "paramCount": 2,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Synth control)"
+    },
+    {
+      "name": "FreeSelf",
+      "descLen": 77,
+      "paramCount": 1,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Synth control)"
+    },
+    {
+      "name": "FreeSelfWhenDone",
+      "descLen": 503,
+      "paramCount": 1,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (503 chars)"
+    },
+    {
+      "name": "FreeVerb",
+      "descLen": 34,
+      "paramCount": 4,
+      "category": "UGens>Reverbs",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ReverbUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (34 chars) + 4 params / UGens>Reverbs — read C++"
+    },
+    {
+      "name": "FreeVerb2",
+      "descLen": 34,
+      "paramCount": 5,
+      "category": "UGens>Reverbs",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ReverbUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (34 chars) + 5 params / UGens>Reverbs — read C++"
+    },
+    {
+      "name": "FreqShift",
+      "descLen": 269,
+      "paramCount": 3,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (269 chars)"
+    },
+    {
+      "name": "FSinOsc",
+      "descLen": 487,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (487 chars)"
+    },
+    {
+      "name": "Gate",
+      "descLen": 84,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Triggers)"
+    },
+    {
+      "name": "GbmanL",
+      "descLen": 443,
+      "paramCount": 3,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (443 chars)"
+    },
+    {
+      "name": "GbmanN",
+      "descLen": 400,
+      "paramCount": 3,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (400 chars)"
+    },
+    {
+      "name": "Gendy1",
+      "descLen": 1549,
+      "paramCount": 10,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GendynUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (1549 chars)"
+    },
+    {
+      "name": "Gendy2",
+      "descLen": 407,
+      "paramCount": 12,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GendynUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (407 chars)"
+    },
+    {
+      "name": "Gendy3",
+      "descLen": 441,
+      "paramCount": 9,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GendynUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (441 chars)"
+    },
+    {
+      "name": "GrainBuf",
+      "descLen": 0,
+      "paramCount": 10,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GrainUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 10 params / UGens>Buffer — read C++"
+    },
+    {
+      "name": "GrainFM",
+      "descLen": 0,
+      "paramCount": 9,
+      "category": "UGens>Generators>Granular",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GrainUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 9 params / UGens>Generators>Granular — read C++"
+    },
+    {
+      "name": "GrainIn",
+      "descLen": 0,
+      "paramCount": 7,
+      "category": "UGens>Generators>Granular",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GrainUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 7 params / UGens>Generators>Granular — read C++"
+    },
+    {
+      "name": "GrainSin",
+      "descLen": 0,
+      "paramCount": 7,
+      "category": "UGens>Generators>Granular",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GrainUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 7 params / UGens>Generators>Granular — read C++"
+    },
+    {
+      "name": "GrayNoise",
+      "descLen": 1059,
+      "paramCount": 0,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (1059 chars)"
+    },
+    {
+      "name": "GVerb",
+      "descLen": 278,
+      "paramCount": 10,
+      "category": "UGens>Reverbs",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ReverbUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (278 chars)"
+    },
+    {
+      "name": "Hasher",
+      "descLen": 203,
+      "paramCount": 1,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (203 chars)"
+    },
+    {
+      "name": "HenonC",
+      "descLen": 542,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (542 chars)"
+    },
+    {
+      "name": "HenonL",
+      "descLen": 400,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (400 chars)"
+    },
+    {
+      "name": "HenonN",
+      "descLen": 397,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (397 chars)"
+    },
+    {
+      "name": "Hilbert",
+      "descLen": 404,
+      "paramCount": 1,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (404 chars)"
+    },
+    {
+      "name": "HilbertFIR",
+      "descLen": 489,
+      "paramCount": 2,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (489 chars)"
+    },
+    {
+      "name": "HPF",
+      "descLen": 32,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Filters>Linear)"
+    },
+    {
+      "name": "HPZ1",
+      "descLen": 124,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (124 chars)"
+    },
+    {
+      "name": "HPZ2",
+      "descLen": 108,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (108 chars)"
+    },
+    {
+      "name": "IEnvGen",
+      "descLen": 164,
+      "paramCount": 2,
+      "category": "UGens>Envelopes",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (164 chars)"
+    },
+    {
+      "name": "IFFT",
+      "descLen": 403,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FFT_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (403 chars)"
+    },
+    {
+      "name": "Impulse",
+      "descLen": 47,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "In",
+      "descLen": 2030,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (2030 chars)"
+    },
+    {
+      "name": "Index",
+      "descLen": 184,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (184 chars)"
+    },
+    {
+      "name": "IndexInBetween",
+      "descLen": 526,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (526 chars)"
+    },
+    {
+      "name": "IndexL",
+      "descLen": 143,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (143 chars)"
+    },
+    {
+      "name": "InFeedback",
+      "descLen": 2120,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (2120 chars)"
+    },
+    {
+      "name": "InfoUGenBase",
+      "descLen": 50,
+      "paramCount": 0,
+      "category": "UGens>Base",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Base)"
+    },
+    {
+      "name": "InRange",
+      "descLen": 50,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (50 chars) + 3 params / UGens>Maths — read C++"
+    },
+    {
+      "name": "InRect",
+      "descLen": 164,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (164 chars)"
+    },
+    {
+      "name": "Integrator",
+      "descLen": 102,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (102 chars)"
+    },
+    {
+      "name": "InTrig",
+      "descLen": 234,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (234 chars)"
+    },
+    {
+      "name": "IRand",
+      "descLen": 198,
+      "paramCount": 2,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (198 chars)"
+    },
+    {
+      "name": "K2A",
+      "descLen": 140,
+      "paramCount": 1,
+      "category": "UGens>Conversion",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (140 chars)"
+    },
+    {
+      "name": "KeyState",
+      "descLen": 763,
+      "paramCount": 4,
+      "category": "UGens>User interaction",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UIUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (763 chars)"
+    },
+    {
+      "name": "KeyTrack",
+      "descLen": 273,
+      "paramCount": 3,
+      "category": "UGens>Analysis>Pitch",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/KeyTrack.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (273 chars)"
+    },
+    {
+      "name": "Klang",
+      "descLen": 142,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (142 chars)"
+    },
+    {
+      "name": "Klank",
+      "descLen": 778,
+      "paramCount": 5,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (778 chars)"
+    },
+    {
+      "name": "Lag",
+      "descLen": 317,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (317 chars)"
+    },
+    {
+      "name": "Lag2",
+      "descLen": 209,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (209 chars)"
+    },
+    {
+      "name": "Lag2UD",
+      "descLen": 208,
+      "paramCount": 3,
+      "category": "UGens>Filters",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (208 chars)"
+    },
+    {
+      "name": "Lag3",
+      "descLen": 229,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (229 chars)"
+    },
+    {
+      "name": "Lag3UD",
+      "descLen": 262,
+      "paramCount": 3,
+      "category": "UGens>Filters",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (262 chars)"
+    },
+    {
+      "name": "LagIn",
+      "descLen": 44,
+      "paramCount": 3,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (44 chars) + 3 params / UGens>InOut — read C++"
+    },
+    {
+      "name": "LagUD",
+      "descLen": 249,
+      "paramCount": 3,
+      "category": "UGens>Filters",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (249 chars)"
+    },
+    {
+      "name": "LastValue",
+      "descLen": 69,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Triggers)"
+    },
+    {
+      "name": "Latch",
+      "descLen": 97,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Triggers)"
+    },
+    {
+      "name": "LatoocarfianC",
+      "descLen": 820,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (820 chars)"
+    },
+    {
+      "name": "LatoocarfianL",
+      "descLen": 821,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (821 chars)"
+    },
+    {
+      "name": "LatoocarfianN",
+      "descLen": 818,
+      "paramCount": 7,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (818 chars)"
+    },
+    {
+      "name": "LeakDC",
+      "descLen": 294,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (294 chars)"
+    },
+    {
+      "name": "LeastChange",
+      "descLen": 258,
+      "paramCount": 2,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (258 chars)"
+    },
+    {
+      "name": "LFClipNoise",
+      "descLen": 172,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (172 chars)"
+    },
+    {
+      "name": "LFCub",
+      "descLen": 65,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "LFDClipNoise",
+      "descLen": 503,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DynNoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (503 chars)"
+    },
+    {
+      "name": "LFDNoise0",
+      "descLen": 468,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DynNoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (468 chars)"
+    },
+    {
+      "name": "LFDNoise1",
+      "descLen": 489,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DynNoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (489 chars)"
+    },
+    {
+      "name": "LFDNoise3",
+      "descLen": 541,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DynNoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (541 chars)"
+    },
+    {
+      "name": "LFGauss",
+      "descLen": 502,
+      "paramCount": 5,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (502 chars)"
+    },
+    {
+      "name": "LFNoise0",
+      "descLen": 112,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (112 chars)"
+    },
+    {
+      "name": "LFNoise1",
+      "descLen": 134,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (134 chars)"
+    },
+    {
+      "name": "LFNoise2",
+      "descLen": 397,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (397 chars)"
+    },
+    {
+      "name": "LFPar",
+      "descLen": 161,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (161 chars)"
+    },
+    {
+      "name": "LFPulse",
+      "descLen": 89,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (89 chars) + 3 params / UGens>Generators>Deterministic — read C++"
+    },
+    {
+      "name": "LFSaw",
+      "descLen": 68,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "LFTri",
+      "descLen": 68,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "Limiter",
+      "descLen": 282,
+      "paramCount": 3,
+      "category": "UGens>Dynamics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (282 chars)"
+    },
+    {
+      "name": "LinCongC",
+      "descLen": 292,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (292 chars)"
+    },
+    {
+      "name": "LinCongL",
+      "descLen": 293,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (293 chars)"
+    },
+    {
+      "name": "LinCongN",
+      "descLen": 290,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (290 chars)"
+    },
+    {
+      "name": "Line",
+      "descLen": 55,
+      "paramCount": 4,
+      "category": "UGens>Envelopes",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (55 chars) + 4 params / UGens>Envelopes — read C++"
+    },
+    {
+      "name": "Linen",
+      "descLen": 33,
+      "paramCount": 5,
+      "category": "UGens>Envelopes",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (33 chars) + 5 params / UGens>Envelopes — read C++"
+    },
+    {
+      "name": "LinExp",
+      "descLen": 68,
+      "paramCount": 5,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (68 chars) + 5 params / UGens>Maths — read C++"
+    },
+    {
+      "name": "LinkJump",
+      "descLen": 1010,
+      "paramCount": 4,
+      "category": "UGens>Clock",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "ai-distill",
+      "note": "long description (1010 chars)"
+    },
+    {
+      "name": "LinkPhase",
+      "descLen": 1501,
+      "paramCount": 1,
+      "category": "UGens>Clock",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "ai-distill",
+      "note": "long description (1501 chars)"
+    },
+    {
+      "name": "LinkTempo",
+      "descLen": 298,
+      "paramCount": 2,
+      "category": "UGens>Clock",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (298 chars)"
+    },
+    {
+      "name": "LinPan2",
+      "descLen": 539,
+      "paramCount": 3,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (539 chars)"
+    },
+    {
+      "name": "LinRand",
+      "descLen": 138,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (138 chars)"
+    },
+    {
+      "name": "LinXFade2",
+      "descLen": 30,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Select",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (30 chars) + 4 params / UGens>Multichannel>Select — read C++"
+    },
+    {
+      "name": "ListDUGen",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "LocalBuf",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Buffer)"
+    },
+    {
+      "name": "LocalIn",
+      "descLen": 758,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (758 chars)"
+    },
+    {
+      "name": "LocalOut",
+      "descLen": 774,
+      "paramCount": 1,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (774 chars)"
+    },
+    {
+      "name": "Logistic",
+      "descLen": 76,
+      "paramCount": 3,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (76 chars) + 3 params / UGens>Generators>Chaotic — read C++"
+    },
+    {
+      "name": "LorenzL",
+      "descLen": 413,
+      "paramCount": 8,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (413 chars)"
+    },
+    {
+      "name": "Loudness",
+      "descLen": 565,
+      "paramCount": 3,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Loudness.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (565 chars)"
+    },
+    {
+      "name": "LPF",
+      "descLen": 31,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Filters>Linear)"
+    },
+    {
+      "name": "LPZ1",
+      "descLen": 118,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (118 chars)"
+    },
+    {
+      "name": "LPZ2",
+      "descLen": 108,
+      "paramCount": 1,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (108 chars)"
+    },
+    {
+      "name": "MantissaMask",
+      "descLen": 160,
+      "paramCount": 2,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (160 chars)"
+    },
+    {
+      "name": "Median",
+      "descLen": 123,
+      "paramCount": 2,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (123 chars)"
+    },
+    {
+      "name": "MFCC",
+      "descLen": 1223,
+      "paramCount": 2,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/MFCC.cpp",
+      "action": "ai-distill",
+      "note": "long description (1223 chars)"
+    },
+    {
+      "name": "MidEQ",
+      "descLen": 38,
+      "paramCount": 4,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (38 chars) + 4 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "ModDif",
+      "descLen": 371,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (371 chars)"
+    },
+    {
+      "name": "MoogFF",
+      "descLen": 153,
+      "paramCount": 4,
+      "category": "UGens>Filters",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (153 chars)"
+    },
+    {
+      "name": "MostChange",
+      "descLen": 256,
+      "paramCount": 2,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (256 chars)"
+    },
+    {
+      "name": "MouseButton",
+      "descLen": 311,
+      "paramCount": 3,
+      "category": "UGens>User interaction",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UIUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (311 chars)"
+    },
+    {
+      "name": "MouseX",
+      "descLen": 344,
+      "paramCount": 4,
+      "category": "UGens>User interaction",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UIUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (344 chars)"
+    },
+    {
+      "name": "MouseY",
+      "descLen": 344,
+      "paramCount": 4,
+      "category": "UGens>User interaction",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UIUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (344 chars)"
+    },
+    {
+      "name": "MultiplexAnalogIn",
+      "descLen": 140,
+      "paramCount": 2,
+      "category": "UGens>Bela",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/BelaUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (140 chars)"
+    },
+    {
+      "name": "NodeID",
+      "descLen": 0,
+      "paramCount": 0,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "Normalizer",
+      "descLen": 211,
+      "paramCount": 3,
+      "category": "UGens>Dynamics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (211 chars)"
+    },
+    {
+      "name": "NRand",
+      "descLen": 89,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (89 chars) + 3 params / UGens>Random — read C++"
+    },
+    {
+      "name": "NumAudioBuses",
+      "descLen": 23,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "NumBuffers",
+      "descLen": 23,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "NumControlBuses",
+      "descLen": 25,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "NumInputBuses",
+      "descLen": 23,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "NumOutputBuses",
+      "descLen": 24,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "NumRunningSynths",
+      "descLen": 35,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "OffsetOut",
+      "descLen": 650,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (650 chars)"
+    },
+    {
+      "name": "OnePole",
+      "descLen": 99,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Filters>Linear)"
+    },
+    {
+      "name": "OneZero",
+      "descLen": 98,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Filters>Linear)"
+    },
+    {
+      "name": "Onsets",
+      "descLen": 574,
+      "paramCount": 9,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Onsets.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (574 chars)"
+    },
+    {
+      "name": "Osc",
+      "descLen": 724,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (724 chars)"
+    },
+    {
+      "name": "OscN",
+      "descLen": 151,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (151 chars)"
+    },
+    {
+      "name": "Out",
+      "descLen": 703,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (703 chars)"
+    },
+    {
+      "name": "PackFFT",
+      "descLen": 269,
+      "paramCount": 6,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UnpackFFTUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (269 chars)"
+    },
+    {
+      "name": "Pan2",
+      "descLen": 474,
+      "paramCount": 3,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (474 chars)"
+    },
+    {
+      "name": "Pan4",
+      "descLen": 97,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (97 chars) + 4 params / UGens>Multichannel>Panners — read C++"
+    },
+    {
+      "name": "PanAz",
+      "descLen": 32,
+      "paramCount": 6,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (32 chars) + 6 params / UGens>Multichannel>Panners — read C++"
+    },
+    {
+      "name": "PanB",
+      "descLen": 67,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Ambisonics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (67 chars) + 4 params / UGens>Multichannel>Ambisonics — read C++"
+    },
+    {
+      "name": "PanB2",
+      "descLen": 58,
+      "paramCount": 3,
+      "category": "UGens>Multichannel>Ambisonics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (58 chars) + 3 params / UGens>Multichannel>Ambisonics — read C++"
+    },
+    {
+      "name": "PartConv",
+      "descLen": 569,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PartitionedConvolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (569 chars)"
+    },
+    {
+      "name": "Pause",
+      "descLen": 30,
+      "paramCount": 2,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Synth control)"
+    },
+    {
+      "name": "PauseSelf",
+      "descLen": 78,
+      "paramCount": 1,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Synth control)"
+    },
+    {
+      "name": "PauseSelfWhenDone",
+      "descLen": 37,
+      "paramCount": 1,
+      "category": "UGens>Synth control",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Synth control)"
+    },
+    {
+      "name": "Peak",
+      "descLen": 402,
+      "paramCount": 2,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (402 chars)"
+    },
+    {
+      "name": "PeakFollower",
+      "descLen": 374,
+      "paramCount": 2,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (374 chars)"
+    },
+    {
+      "name": "Phasor",
+      "descLen": 565,
+      "paramCount": 5,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (565 chars)"
+    },
+    {
+      "name": "PinkNoise",
+      "descLen": 524,
+      "paramCount": 0,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (524 chars)"
+    },
+    {
+      "name": "Pitch",
+      "descLen": 558,
+      "paramCount": 11,
+      "category": "UGens>Analysis>Pitch",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (558 chars)"
+    },
+    {
+      "name": "PitchShift",
+      "descLen": 148,
+      "paramCount": 5,
+      "category": "UGens>Filters>Pitch",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (148 chars)"
+    },
+    {
+      "name": "PlayBuf",
+      "descLen": 39,
+      "paramCount": 7,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (39 chars) + 7 params / UGens>Buffer — read C++"
+    },
+    {
+      "name": "Pluck",
+      "descLen": 21,
+      "paramCount": 6,
+      "category": "UGens>Delays",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (21 chars) + 6 params / UGens>Delays — read C++"
+    },
+    {
+      "name": "Poll",
+      "descLen": 188,
+      "paramCount": 4,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (188 chars)"
+    },
+    {
+      "name": "PSinGrain",
+      "descLen": 47,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (47 chars) + 3 params / UGens>Generators>Deterministic — read C++"
+    },
+    {
+      "name": "Pulse",
+      "descLen": 62,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "PulseCount",
+      "descLen": 62,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Triggers)"
+    },
+    {
+      "name": "PulseDivider",
+      "descLen": 84,
+      "paramCount": 3,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (84 chars) + 3 params / UGens>Triggers — read C++"
+    },
+    {
+      "name": "PV_Add",
+      "descLen": 47,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (47 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_BinScramble",
+      "descLen": 80,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (80 chars) + 4 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_BinShift",
+      "descLen": 96,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (96 chars) + 4 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_BinWipe",
+      "descLen": 62,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (62 chars) + 3 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_BrickWall",
+      "descLen": 42,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (42 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_ConformalMap",
+      "descLen": 466,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_ThirdParty.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (466 chars)"
+    },
+    {
+      "name": "PV_Conj",
+      "descLen": 225,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (225 chars)"
+    },
+    {
+      "name": "PV_Copy",
+      "descLen": 515,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (515 chars)"
+    },
+    {
+      "name": "PV_CopyPhase",
+      "descLen": 66,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (66 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_Diffuser",
+      "descLen": 112,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (112 chars)"
+    },
+    {
+      "name": "PV_Div",
+      "descLen": 0,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (0 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_HainsworthFoote",
+      "descLen": 605,
+      "paramCount": 5,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FeatureDetection.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (605 chars)"
+    },
+    {
+      "name": "PV_JensenAndersen",
+      "descLen": 388,
+      "paramCount": 7,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FeatureDetection.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (388 chars)"
+    },
+    {
+      "name": "PV_LocalMax",
+      "descLen": 88,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (88 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagAbove",
+      "descLen": 54,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (54 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagBelow",
+      "descLen": 54,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (54 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagClip",
+      "descLen": 44,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (44 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagDiv",
+      "descLen": 73,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (73 chars) + 3 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagFreeze",
+      "descLen": 53,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (53 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagMul",
+      "descLen": 76,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (76 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagNoise",
+      "descLen": 37,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (37 chars) + 1 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagShift",
+      "descLen": 120,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (120 chars)"
+    },
+    {
+      "name": "PV_MagSmear",
+      "descLen": 45,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (45 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_MagSquared",
+      "descLen": 86,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (86 chars) + 1 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_Max",
+      "descLen": 64,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (64 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_Min",
+      "descLen": 64,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (64 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_Mul",
+      "descLen": 93,
+      "paramCount": 2,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (93 chars) + 2 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_PhaseShift",
+      "descLen": 24,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (24 chars) + 3 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_PhaseShift270",
+      "descLen": 39,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (39 chars) + 1 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_PhaseShift90",
+      "descLen": 38,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (38 chars) + 1 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_RandComb",
+      "descLen": 20,
+      "paramCount": 3,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (20 chars) + 3 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_RandWipe",
+      "descLen": 64,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (64 chars) + 4 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_RectComb",
+      "descLen": 37,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (37 chars) + 4 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "PV_RectComb2",
+      "descLen": 49,
+      "paramCount": 5,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PV_UGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (49 chars) + 5 params / UGens>FFT — read C++"
+    },
+    {
+      "name": "QuadC",
+      "descLen": 251,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (251 chars)"
+    },
+    {
+      "name": "QuadL",
+      "descLen": 252,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (252 chars)"
+    },
+    {
+      "name": "QuadN",
+      "descLen": 249,
+      "paramCount": 5,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (249 chars)"
+    },
+    {
+      "name": "RadiansPerSample",
+      "descLen": 41,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "Ramp",
+      "descLen": 268,
+      "paramCount": 2,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (268 chars)"
+    },
+    {
+      "name": "Rand",
+      "descLen": 196,
+      "paramCount": 2,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (196 chars)"
+    },
+    {
+      "name": "RandID",
+      "descLen": 170,
+      "paramCount": 1,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (170 chars)"
+    },
+    {
+      "name": "RandSeed",
+      "descLen": 314,
+      "paramCount": 2,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (314 chars)"
+    },
+    {
+      "name": "RecordBuf",
+      "descLen": 328,
+      "paramCount": 9,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (328 chars)"
+    },
+    {
+      "name": "ReplaceOut",
+      "descLen": 327,
+      "paramCount": 2,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (327 chars)"
+    },
+    {
+      "name": "Resonz",
+      "descLen": 291,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (291 chars)"
+    },
+    {
+      "name": "RHPF",
+      "descLen": 28,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (28 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "Ringz",
+      "descLen": 295,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (295 chars)"
+    },
+    {
+      "name": "RLPF",
+      "descLen": 27,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (27 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "Rotate2",
+      "descLen": 503,
+      "paramCount": 3,
+      "category": "UGens>Multichannel>Ambisonics",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (503 chars)"
+    },
+    {
+      "name": "RunningMax",
+      "descLen": 146,
+      "paramCount": 2,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (146 chars)"
+    },
+    {
+      "name": "RunningMin",
+      "descLen": 146,
+      "paramCount": 2,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (146 chars)"
+    },
+    {
+      "name": "RunningSum",
+      "descLen": 94,
+      "paramCount": 2,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FeatureDetection.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (94 chars) + 2 params / UGens>Analysis — read C++"
+    },
+    {
+      "name": "SampleDur",
+      "descLen": 78,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "SampleRate",
+      "descLen": 46,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Info)"
+    },
+    {
+      "name": "Sanitize",
+      "descLen": 291,
+      "paramCount": 2,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TestUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (291 chars)"
+    },
+    {
+      "name": "Saw",
+      "descLen": 37,
+      "paramCount": 1,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Generators>Deterministic)"
+    },
+    {
+      "name": "Schmidt",
+      "descLen": 230,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (230 chars)"
+    },
+    {
+      "name": "ScopeOut",
+      "descLen": 28,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Buffer)"
+    },
+    {
+      "name": "ScopeOut2",
+      "descLen": 0,
+      "paramCount": 4,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "Select",
+      "descLen": 358,
+      "paramCount": 2,
+      "category": "UGens>Multichannel>Select",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (358 chars)"
+    },
+    {
+      "name": "SendPeakRMS",
+      "descLen": 149,
+      "paramCount": 5,
+      "category": "UGens>Analysis>Amplitude",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (149 chars)"
+    },
+    {
+      "name": "SendReply",
+      "descLen": 133,
+      "paramCount": 4,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (133 chars)"
+    },
+    {
+      "name": "SendTrig",
+      "descLen": 549,
+      "paramCount": 3,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (549 chars)"
+    },
+    {
+      "name": "SetBuf",
+      "descLen": 0,
+      "paramCount": 3,
+      "category": "",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "keep-summary",
+      "note": "manual summary provided"
+    },
+    {
+      "name": "SetResetFF",
+      "descLen": 446,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (446 chars)"
+    },
+    {
+      "name": "Shaper",
+      "descLen": 68,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Buffer)"
+    },
+    {
+      "name": "SinOsc",
+      "descLen": 540,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (540 chars)"
+    },
+    {
+      "name": "SinOscFB",
+      "descLen": 708,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (708 chars)"
+    },
+    {
+      "name": "Slew",
+      "descLen": 146,
+      "paramCount": 3,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (146 chars)"
+    },
+    {
+      "name": "Slope",
+      "descLen": 119,
+      "paramCount": 1,
+      "category": "UGens>Analysis",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (119 chars)"
+    },
+    {
+      "name": "SOS",
+      "descLen": 229,
+      "paramCount": 6,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (229 chars)"
+    },
+    {
+      "name": "SpecCentroid",
+      "descLen": 226,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ML_SpecStats.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (226 chars)"
+    },
+    {
+      "name": "SpecFlatness",
+      "descLen": 400,
+      "paramCount": 1,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ML_SpecStats.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (400 chars)"
+    },
+    {
+      "name": "SpecPcile",
+      "descLen": 876,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ML_SpecStats.cpp",
+      "action": "ai-distill",
+      "note": "long description (876 chars)"
+    },
+    {
+      "name": "Splay",
+      "descLen": 230,
+      "paramCount": 5,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (230 chars)"
+    },
+    {
+      "name": "SplayAz",
+      "descLen": 273,
+      "paramCount": 8,
+      "category": "UGens>Multichannel>Panners",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (273 chars)"
+    },
+    {
+      "name": "Spring",
+      "descLen": 39,
+      "paramCount": 3,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PhysicalModelingUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (39 chars) + 3 params / UGens>Filters>Nonlinear — read C++"
+    },
+    {
+      "name": "StandardL",
+      "descLen": 429,
+      "paramCount": 4,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (429 chars)"
+    },
+    {
+      "name": "StandardN",
+      "descLen": 426,
+      "paramCount": 4,
+      "category": "UGens>Generators>Chaotic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/ChaosUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (426 chars)"
+    },
+    {
+      "name": "Stepper",
+      "descLen": 102,
+      "paramCount": 6,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (102 chars)"
+    },
+    {
+      "name": "StereoConvolution2L",
+      "descLen": 535,
+      "paramCount": 6,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/Convolution.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (535 chars)"
+    },
+    {
+      "name": "SubsampleOffset",
+      "descLen": 438,
+      "paramCount": 0,
+      "category": "UGens>Info",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (438 chars)"
+    },
+    {
+      "name": "Sweep",
+      "descLen": 224,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (224 chars)"
+    },
+    {
+      "name": "SyncSaw",
+      "descLen": 280,
+      "paramCount": 2,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (280 chars)"
+    },
+    {
+      "name": "T2A",
+      "descLen": 89,
+      "paramCount": 2,
+      "category": "UGens>Conversion",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (2 params, UGens>Conversion)"
+    },
+    {
+      "name": "T2K",
+      "descLen": 127,
+      "paramCount": 1,
+      "category": "UGens>Conversion",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (127 chars)"
+    },
+    {
+      "name": "Tap",
+      "descLen": 96,
+      "paramCount": 3,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "ai-from-source",
+      "note": "thin docs, no C++ source found — read what exists"
+    },
+    {
+      "name": "TBall",
+      "descLen": 80,
+      "paramCount": 4,
+      "category": "UGens>Filters>Nonlinear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PhysicalModelingUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (80 chars) + 4 params / UGens>Filters>Nonlinear — read C++"
+    },
+    {
+      "name": "TDelay",
+      "descLen": 133,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (133 chars)"
+    },
+    {
+      "name": "TDuty",
+      "descLen": 349,
+      "paramCount": 5,
+      "category": "UGens>Demand",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DemandUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (349 chars)"
+    },
+    {
+      "name": "TExpRand",
+      "descLen": 201,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (201 chars)"
+    },
+    {
+      "name": "TGrains",
+      "descLen": 147,
+      "paramCount": 9,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DelayUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (147 chars)"
+    },
+    {
+      "name": "Timer",
+      "descLen": 302,
+      "paramCount": 1,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (302 chars)"
+    },
+    {
+      "name": "TIRand",
+      "descLen": 144,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (144 chars)"
+    },
+    {
+      "name": "ToggleFF",
+      "descLen": 49,
+      "paramCount": 1,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (1 params, UGens>Triggers)"
+    },
+    {
+      "name": "TRand",
+      "descLen": 142,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (142 chars)"
+    },
+    {
+      "name": "Trig",
+      "descLen": 164,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (164 chars)"
+    },
+    {
+      "name": "Trig1",
+      "descLen": 127,
+      "paramCount": 2,
+      "category": "UGens>Triggers",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (127 chars)"
+    },
+    {
+      "name": "TWindex",
+      "descLen": 236,
+      "paramCount": 3,
+      "category": "UGens>Random",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (236 chars)"
+    },
+    {
+      "name": "TwoPole",
+      "descLen": 119,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (119 chars)"
+    },
+    {
+      "name": "TwoZero",
+      "descLen": 18,
+      "paramCount": 3,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (18 chars) + 3 params / UGens>Filters>Linear — read C++"
+    },
+    {
+      "name": "Unpack1FFT",
+      "descLen": 434,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/UnpackFFTUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (434 chars)"
+    },
+    {
+      "name": "UnpackFFT",
+      "descLen": 532,
+      "paramCount": 4,
+      "category": "UGens>FFT",
+      "hasSummary": true,
+      "cppFile": null,
+      "action": "mechanical",
+      "note": "sweet-spot description (532 chars)"
+    },
+    {
+      "name": "VarLag",
+      "descLen": 617,
+      "paramCount": 5,
+      "category": "UGens>Filters>Linear",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/FilterUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (617 chars)"
+    },
+    {
+      "name": "VarSaw",
+      "descLen": 48,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (48 chars) + 3 params / UGens>Generators>Deterministic — read C++"
+    },
+    {
+      "name": "VDiskIn",
+      "descLen": 117,
+      "paramCount": 5,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/DiskIO_UGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (117 chars)"
+    },
+    {
+      "name": "Vibrato",
+      "descLen": 808,
+      "paramCount": 9,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (808 chars)"
+    },
+    {
+      "name": "VOsc",
+      "descLen": 1091,
+      "paramCount": 3,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (1091 chars)"
+    },
+    {
+      "name": "VOsc3",
+      "descLen": 1238,
+      "paramCount": 4,
+      "category": "UGens>Generators>Deterministic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "ai-distill",
+      "note": "long description (1238 chars)"
+    },
+    {
+      "name": "Warp1",
+      "descLen": 155,
+      "paramCount": 9,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/GrainUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (155 chars)"
+    },
+    {
+      "name": "WhiteNoise",
+      "descLen": 66,
+      "paramCount": 0,
+      "category": "UGens>Generators>Stochastic",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/NoiseUGens.cpp",
+      "action": "keep-summary",
+      "note": "short & simple (0 params, UGens>Generators>Stochastic)"
+    },
+    {
+      "name": "Wrap",
+      "descLen": 99,
+      "paramCount": 3,
+      "category": "UGens>Maths",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (99 chars) + 3 params / UGens>Maths — read C++"
+    },
+    {
+      "name": "WrapIndex",
+      "descLen": 161,
+      "paramCount": 2,
+      "category": "UGens>Buffer",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/OscUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (161 chars)"
+    },
+    {
+      "name": "XFade2",
+      "descLen": 35,
+      "paramCount": 4,
+      "category": "UGens>Multichannel>Select",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/PanUGens.cpp",
+      "action": "ai-from-source",
+      "note": "thin docs (35 chars) + 4 params / UGens>Multichannel>Select — read C++"
+    },
+    {
+      "name": "XLine",
+      "descLen": 140,
+      "paramCount": 4,
+      "category": "UGens>Envelopes",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/LFUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (140 chars)"
+    },
+    {
+      "name": "XOut",
+      "descLen": 349,
+      "paramCount": 3,
+      "category": "UGens>InOut",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/IOUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (349 chars)"
+    },
+    {
+      "name": "ZeroCrossing",
+      "descLen": 274,
+      "paramCount": 1,
+      "category": "UGens>Analysis>Pitch",
+      "hasSummary": true,
+      "cppFile": "./supercollider/server/plugins/TriggerUGens.cpp",
+      "action": "mechanical",
+      "note": "sweet-spot description (274 chars)"
+    }
+  ]
+}

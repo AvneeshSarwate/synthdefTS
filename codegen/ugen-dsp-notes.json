@@ -1,0 +1,765 @@
+{
+  "APF": {
+    "note": "Second-order IIR all-pass filter: y[n] = x[n] + b1*(y[n-1]-x[n-1]) + b2*(y[n-2]-x[n-2]), where b1 = 2*radius*cos(freq*radiansPerSample) and b2 = -(radius^2). Unity magnitude at all frequencies; phase rotation centered at freq. Parameter changes interpolate b1/b2 over the control period; radius >= 1.0 places poles on or outside the unit circle (marginally stable or unstable).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Ball": {
+    "note": "Each sample: subtract gravity from velocity, advance position, then resolve collision. On collision (pos <= floor), velocity is set to (floorVel - vel) * damping; dither (scaled by g_in) is always added. A sticky zone (|dist| < k, where k is scaled by g_in) either snaps vel=0/pos=floor+g or interpolates toward floor velocity.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "BeatTrack": {
+    "note": "Operates on a 1024-bin FFT chain (44.1/48 kHz) using autocorrelation over a 6-second window to estimate tactus, emitting four k-rate outputs: quarter, eighth, sixteenth ticks, and tempo in BPM. Biased toward 100–120 BPM via internal weighting; detects tactus only, no meter. When lock > 0.5 the model still updates phase/period internally but the outputs are frozen; dropping lock below 0.5 releases the latest solution to output.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "BeatTrack2": {
+    "note": "Cross-correlates straight/swung-triplet 16th-note templates (60-180 bpm) every 0.5 s over a configurable window (default 2 s); outputs six k-rate signals: beattick, eighthtick, groovetick, tempo, phase, groove. Features enter via consecutive control buses; latency ~2.8 s (2.5 s base + 0.3 s block amortization, with consistency check adding 0.5 s to suppress wild tempo jumps). Lock > 0.5 freezes tick output at current phase/period while internal model continues updating; ticks resume from updated state when lock drops below 0.5.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "BPF": {
+    "note": "Bilinear-transform 2nd-order IIR BP (Direct Form II): C = 1/tan(rq·ω/2), D = 2·cos(ω); a0 = 1/(1+C), b1 = C·D·a0, b2 = (1−C)·a0; output = a0·(y0−y2). rq = bandwidth/freq gives constant-Q behavior. Coefficients are linearly interpolated each control period; as freq→0, pbw→0 and C = 1/tan(pbw) diverges, causing documented instability.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "BRF": {
+    "note": "Second-order IIR notch (2-pole/2-zero Butterworth band-reject): C = tan(rq * freq_radians / 2), D = 2*cos(freq_radians), a0 = 1/(1+C), a1 = -D*a0, b2 = (1-C)*a0. Per-sample: y0 = in - a1*y1 - b2*y2; out = a0*(y0+y2) + a1*y1. Fixed rq gives proportionally wider notch at higher frequencies (pbw = rq*pfreq/2). On freq/rq change, coefficients are linearly interpolated over the filter sub-buffer; the help warns that very low center frequencies may cause glitches.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Clip": {
+    "note": "Hard-clips each sample to [lo, hi] via sc_clip (hard clamp, no saturation). Control-rate lo/hi are linearly interpolated across the block using CALCSLOPE, ramping from the previous value to the new kr value within the same block. Audio-rate lo/hi are applied per-sample with no interpolation.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Compander": {
+    "note": "Hard-knee dynamics processor: peak-follows the control signal with abs(), using separate one-pole coefficients exp(log(0.1)/(time*sr)) for attack (clampTime, upward) and release (relaxTime, downward). Gain scalar pow(envelope/thresh, slope-1) is computed once per control block and linearly interpolated per sample; slope==1.0 short-circuits to unity. The help doc claims RMS; the source uses abs().",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Dbufrd": {
+    "note": "On each demand trigger, reads channel 0 only from a buffer at an integer-truncated (no interpolation) phase index. With loop=1, phase wraps modulo bufFrames; with loop=0, phase clamps to [0, bufFrames-1] and sets mDone=true. NaN from the phase input is passed straight to the output.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Dbufwr": {
+    "note": "On each demand tick, reads the phase input, applies sc_loop (wrap if loop=1, clamp+done if loop=0), truncates to int frame index, and writes the value to channel 0 of that buffer slot; the written value passes through as output. NaN on phase or value propagates NaN immediately, ending the sequence.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Ddup": {
+    "note": "A demand-rate value latch with a variable repeat count: on each demand trigger, if the internal counter m_repeatCount >= m_repeats, it pulls the next value from the input stream and a new repeat count n (rounded to nearest integer via floor(n+0.5)), resets the counter to 0, and outputs that value; otherwise it outputs the cached value and increments the counter. Because m_repeats is initialized to -1 and m_repeatCount to 0, the very first demand always fetches immediately. The repeat-count argument n may itself be a demand UGen, so a fresh n is consumed from that stream each time a new input value is latched. Either stream returning NaN terminates output with NaN, propagating end-of-stream correctly through chains.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Delay2": {
+    "note": "A two-sample integer delay: y[n] = x[n-2], implemented via a two-register shift (m_x1, m_x2 stored as floats in the struct, promoted to double locals in _next to avoid accumulation). The constructor initializes both registers from explicit x1/x2 arguments (defaulting to 0 at audio rate, first input sample at control rate), so the output sequence is strictly [x2, x1, x[0], x[1], ...] with no transient artifact if predelay samples are supplied correctly. The inner loop uses mFilterLoops (three samples per LOOP iteration, unrolled: each iteration reads 3 input samples and writes 3 output samples interleaved), with mFilterRemain handling leftover samples using the simple shift x2=x1, x1=x0. There are no feedback paths, no stability concerns, and no parameters beyond the predelay init values — behavior is fully deterministic and linear at any sample rate.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "DetectSilence": {
+    "note": "Monitors whether abs(in) stays continuously below the amp threshold for the full time window; outputs 0 while any sample exceeds the threshold, then latches to 1 once silence persists for the required duration and fires doneAction on that 0→1 transition. The UGen does not start its silence timer until the input has been non-silent at least once, so a permanently-zero input at synth start will hang indefinitely — prepend Impulse.ar(0) to force an immediate non-silence event. DC bias is treated identically to a loud signal (no AC coupling internally), so wrap in LeakDC before use if bias is present. Multichannel expansion creates independent UGens that each fire doneAction separately (OR semantics); for AND semantics, multiply their 1/0 outputs and gate FreeSelf.kr on the product.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "Dgeom": {
+    "note": "On each demand tick, outputs the current accumulator then multiplies it in-place: y[n] = start * grow^n, implemented as state update m_value *= m_grow after output. The grow argument is re-polled from its demand-rate input every tick (slot 2), so grow can itself be a dynamic sequence — but start and length are latched only once at sequence initialization (when m_repeats &lt; 0), meaning retrigger/reset resamples them. Exhaustion is signalled by NaN output once repeatCount reaches length (rounded to nearest integer); length=inf stores as double infinity so the count never catches it, running forever. With grow=1 it degenerates to a constant; grow&gt;1 produces unbounded exponential growth that will overflow float range if length is large, so callers must bound or scale externally.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "DiskOut": {
+    "note": "Writes audio to disk via a server-side Buffer that acts as a staging ring buffer; smaller buffers increase disk-access frequency and risk dropouts. Buffer numFrames must be a power of two and at least 65536 (131072–262144 preferred). Channel count mismatch between the buffer and channelsArray causes silent failure with no audio written. The file header is not finalized until b.close is called after stopping the synth; skipping this step renders the output file unreadable.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Done": {
+    "note": "A control-rate UGen that monitors the internal \"done\" flag of a supported source UGen (PlayBuf, Line, XLine, EnvGen, Linen, BufRd/BufWr, DiskIn/VDiskIn, Demand, RecordBuf, Dbufrd/Dbufwr) and outputs 0 until that flag is set, then outputs 1 permanently. Output is a binary latch: once high it never resets within the synth's lifetime. Primary use is to gate or trigger other signal-graph branches on completion of a finite UGen, or to feed into FreeSelf/TDelay chains to schedule delayed node cleanup — enabling reverb-tail patterns that doneAction alone cannot produce, since doneAction fires immediately on the source UGen's completion without the ability to insert a delay.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "Dseq": {
+    "note": "A demand-rate sequencer that steps through its list inputs one element per trigger, cycling for `repeats` full passes before emitting NaN (the demand-rate end-of-sequence sentinel). `repeats` is itself demand-readable and is latched on first demand (stored as `floor(x+0.5)`; a NaN input collapses to 0 repeats). When a list slot is a demand UGen, Dseq pulls one value per trigger and advances the outer index only when that child returns NaN; a `m_needToResetChild` flag is set at that point and RESETINPUT is called deferred — just before the next read from the newly-advanced slot — not immediately on NaN. Non-demand list slots are read and the index is immediately advanced; `repeats=inf` runs indefinitely because the comparison is against a double, and the empty-sequence guard aborts after `mNumInputs` fruitless iterations to prevent infinite spin.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Dser": {
+    "note": "Demand-rate sequencer that iterates through its list input-by-input, yielding exactly `repeats` individual values total before outputting NaN to signal exhaustion. Unlike Dseq — where `repeats` counts full passes through the list — Dser increments its repeat counter once per element consumed, so `Dser([a,b,c], 5)` yields a,b,c,a,b and stops mid-cycle. When a list element is itself a demand UGen, it is pulled until it returns NaN (exhausted), at which point the index advances, the child is reset via RESETINPUT, and the repeat counter increments. The `repeats` argument is itself demand-readable and is latched on the first trigger (NaN from repeats resolves to 0, outputting NaN immediately); non-integer values are rounded via floor(x+0.5).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Dseries": {
+    "note": "On each demand trigger, outputs the current accumulator value then increments it: y[0]=start, y[n]=y[n-1]+step (double-precision accumulation). The `length` input is sampled only once per sequence run — at the first trigger after reset (m_repeats < 0), it is rounded to the nearest integer via floor(x+0.5); once exhausted, the UGen emits NaN to signal end-of-sequence to the Demand UGen upstream. The `step` input is re-sampled on every trigger (before the length-init check), so a demand-rate step source can modulate stride mid-sequence, but a NaN step is silently ignored and the previous step value is retained. Setting length=inf produces an unbounded series; finite length sequences restart from scratch only when the parent Demand UGen resets the demand chain.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Dshuf": {
+    "note": "Demand-rate UGen that performs a single Fisher-Yates shuffle of its input list at construction/reset time (via irand on the server RNG), then outputs each element in that fixed shuffled order on successive demand ticks. The shuffle is not re-randomized between repeat passes: all `repeats` passes traverse the same permutation, advancing a sequential index into the stored `m_indices` array. Nested demand UGens in list slots are drained to NaN exhaustion before the index advances, enabling embedded pattern hierarchies. When `m_repeatCount >= repeats`, NaN is emitted to signal downstream exhaustion; `repeats` is read lazily from input slot 0 on the first demand tick (sentinel -1 until then), so a UGen-rate repeats argument is sampled only once per reset cycle.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Dstutter": {
+    "note": "A demand-rate value-replication unit: on each demand tick it checks whether m_repeatCount >= m_repeats; if so, it pulls one new value from the input stream and a new repeat count (rounded to nearest integer via floor(n+0.5)), resets m_repeatCount to 0, then outputs m_value and increments m_repeatCount. The upstream input and repeat-count inputs are themselves demand UGens, so both can vary per block. Either input going NaN propagates NaN downstream and halts further pulls. Initialised with m_repeats=-1 so the very first demand tick always fetches a fresh value and repeat count. At runtime this class is identical to Ddup; the help file notes Dstutter is retained only for backward compatibility and its constructor actually returns a Ddup instance.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Dunique": {
+    "note": "Wraps a demand UGen so that multiple downstream demand streams all receive the same value sequence rather than each consuming their own interleaved subset of that UGen's output. Internally, it buffers produced values up to maxBufferSize; if one consumer runs faster than another, values are replayed from the buffer. With protected=true (default), the series terminates if the buffer is overrun, relying on a float32 counter that caps safe playback at 16,777,216 events. Set protected=false to allow looping from the buffer start instead of terminating, sizing maxBufferSize appropriately for mismatched-rate consumers.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Dwrand": {
+    "note": "Demand-rate weighted random selector: on each trigger, draws a uniform random float r in [0,1) and walks the weights array accumulating a running sum, selecting the first index i where sum >= r (O(N) per trigger, no alias table). If the selected slot is a scalar, it is output immediately, WINDEX runs again (new random pick), and repeatCount increments. If it is a sub-demand-UGen, that child is polled trigger-by-trigger until it returns NaN (signaling exhaustion), at which point WINDEX picks a new random slot and repeatCount increments; the exhausted child is reset at the start of its next visit. Weights are read live from inputs each trigger rather than pre-accumulated, so they can be modulated; if they sum to less than 1.0 the CDF walk may exhaust without breaking, leaving m_index stale and silently reusing the previously selected slot. The repeats argument is a demand input read lazily on the first trigger (rounded to nearest integer via floor(x+0.5)); output becomes NaN once repeatCount reaches that value.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "FFT": {
+    "note": "Accumulates incoming audio into overlapping frames of power-of-two size, applies a window (rectangular=-1, sine=0, Hann=1), and writes the complex spectrum into a mono buffer for in-place manipulation by PV UGens before IFFT reconstruction. The hop parameter sets frame advance as a fraction of buffer size (default 0.5 = 50% overlap); output is a kr-rate chain signal, not audio. For phase-vocoder use, the doc recommends sine windowing (default) at hop 0.5; changing either hop or wintype from their defaults will typically cause windowing artifacts on resynthesis (a hop of 0.25 with Hann windowing is noted as a useful alternative). Zero-padding is supported by setting winsize smaller than buffer size (both must be powers of two).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "FFTTrigger": {
+    "note": "Emits a periodic trigger signal for the FFT chain bus without performing any FFT: the output is -1 every control-rate block except once per hop period, when it outputs the buffer number (signaling downstream UGens such as PackFFT/IFFT to process the buffer). The trigger period is computed as `m_numPeriods = floor((bufSize * hop) / blockSize) - 1` control blocks, so the trigger fires every `bufSize * hop` samples. On the trigger block `m_pos` is reset to 0 and `m_periodsRemain` reloaded; in all other blocks only the decrement occurs, costing essentially nothing. The `polar` argument is applied once at construction by setting `buf->coord` to `coord_Polar` or `coord_Complex` and is never re-evaluated, so changing it at runtime has no effect; mismatching this flag with what PackFFT writes will silently corrupt the spectral data passed to IFFT.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Fold": {
+    "note": "Applies hard-boundary triangular folding to each sample: values within [lo, hi] pass through unchanged; a single overshoot is reflected back by mirror arithmetic (e.g. if in >= hi, out = 2*hi - in), which handles most real-signal cases at zero cost. For larger excursions, the general path normalizes the offset x = in - lo into one period of range2 = 2*(hi-lo) via c = x - range2*floor(x/range2), then folds the upper half back as range2 - c, yielding a piecewise-linear triangle wave mapped onto [lo, hi]; when lo==hi the output is clamped to lo (avoids division by zero). Control-rate lo/hi are linearly interpolated per sample (CALCSLOPE) in the kk/ak/ka variants, so modulating the boundaries smoothly is safe; audio-rate boundaries (aa variant) use the raw per-sample value with no interpolation.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Formant": {
+    "note": "Produces a sine wave at formfreq (phase2), phase-locked and reset every fundfreq (f0) cycle, windowed by a raised-cosine envelope (1 - cos(phase3)) derived from a third oscillator advancing at max(fundfreq, bwfreq); output is zeroed when phase3 exceeds one full cycle, so the duty cycle of the active window narrows as bwfreq increases relative to f0. All three integer phases are synchronised on each f0 period boundary: phase2 and phase3 are set proportionally to phase1's overshoot (phase2 = overshoot * freq2/freq1; phase3 = overshoot * freq3/freq1), ensuring harmonic coherence across tempo or pitch changes. bwfreq must be >= fundfreq (enforced by the max(freq1, freq3) clamp on the window rate); setting bwfreq < fundfreq collapses the window rate to f0, giving a full-duty-cycle raised-cosine pulse at the formant. No anti-aliasing is applied, so high formfreq/fundfreq ratios can alias badly at low sample rates.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "FreeVerb": {
+    "note": "Eight parallel Schroeder comb filters (delay lengths 1617, 1557, 1491, 1422, 1277, 1116, 1188, 1356 samples at 44.1 kHz) feed a series of four allpass diffusers in order 556, 441, 341, 225 samples. Each comb filter embeds a one-pole lowpass damper: damper[n] = (1-g)*delay_out[n] + g*damper[n-1] where g = 0.4*damp, and writes back input*0.015 + feedback_coef*damper[n]; feedback_coef = 0.7 + 0.28*room, so room=1 gives 0.98, approaching but not reaching instability. Each allpass stage uses fixed coefficient 0.5: output = delay_out - cascade_input, write = 0.5*delay_out + cascade_input. Parameters are hard-clipped to [0,1] per block (not per sample), so automation artifacts can occur at the clip boundary; raising room toward 1 dramatically extends decay because comb feedback is near unity gain, while damp above ~0.5 increasingly rolls off HF energy on every recirculation pass.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "FreeVerb2": {
+    "note": "Stereo Schroeder reverb with two fully independent banks (L/R use slightly different delay lengths), each consisting of 8 parallel feedback comb filters followed by 4 series allpass filters. Both stereo inputs are first summed to mono and scaled by 0.015 before feeding both banks, so the reverb tail is mono-sourced even though decorrelated by differing comb lengths (L: 1617,1557,1491,1422,1277,1116,1188,1356 samples; R: 1640,1580,1514,1445,1300,1139,1211,1379 samples). Each comb uses a one-pole lowpass in the feedback path — the comb feedback coefficient is g = 0.7 + 0.28*room (range [0.7, 0.98]), and damping is a leaky integrator with coefficients (1 - 0.4*damp) for the direct term and 0.4*damp for the integrated term; at room=1 g=0.98 produces a very long tail and the comb approaches marginal stability with sustained tonal inputs. The four allpass stages per channel use a fixed scattering coefficient of 0.5 (Schroeder allpass: write = 0.5*R + input, output = R - input); all three parameters are hard-clipped to [0,1] each block.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Gendy1": {
+    "note": "Gendy1 linearly interpolates between N control points (initCPs, default 12 per Xenakis), random-walking each point's amplitude and inter-point duration every period via a chosen distribution (Linear, Cauchy, Logistic, Hyperbolic Cosine, Arcsine, Exponential, or external oscillator), with adparam/ddparam (0.0001–1) shaping the distribution and ampscale/durscale (0–1) scaling the delta step size. The period equals the sum of all inter-point durations and varies continuously unless durscale=0; minfreq/maxfreq clamp the oscillator frequency. knum=1 produces noise; knum=2 yields a crude oscillator. CPU cost rises with both initCPs and frequency, since a new breakpoint perturbation fires every sample when breakpoints are dense.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "GrainBuf": {
+    "note": "On each trigger, a grain is spawned that reads a mono buffer starting at phase = pos * bufFrames, advancing each sample by rate * bufSampleRate * SAMPLEDUR (so rate=1.0 reproduces the buffer's native pitch regardless of server rate). The internal Hann envelope is generated by a squared-sine second-order IIR resonator: b1 = 2·cos(π/N), seeded with y1=sin(π/N), y2=0, then y0 = b1·y1 − y2; y2 = y1; y1 = y0; amp = y1², where N is grain duration in samples (clamped to ≥ 4). Custom envelopes (winType ≥ 0) linearly interpolate a user buffer at stride windowSamples/N per sample. Interpolation is selectable per-grain (1=nearest, 2=linear, 4=cubic); multichannel output uses constant-power cos/sin panning across adjacent channel pairs, with the channel assignment frozen at grain spawn. New grains are silently dropped once mNumActive reaches maxGrains, with no warning to the audio thread beyond a Print call.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "GrainFM": {
+    "note": "Each grain runs two integer-phase sine oscillators (carrier and modulator) read from SC's global sine wavetable via linear interpolation. At grain init, deviation = index * modfreq (Hz); per sample, the modulator output thismod = sin(moscphase) * deviation is added to carfreq to get the carrier's instantaneous frequency: cfreq = cpstoinc * (carfreq + thismod), so the modulation depth in Hz is purely index * modfreq with no carrier-ratio scaling. Both oscillator phases are reset to zero at every grain onset — there is no phase randomization — which means pitched grain clouds can exhibit comb-filtering artifacts at high trigger rates unless carfreq or modfreq are varied. The built-in envelope (envbufnum = -1) is a recursive quadrature sine resonator initialised as b1 = 2*cos(pi/N), y1 = sin(pi/N), y2 = 0, iterated as y0 = b1*y1 - y2 with amp = y1^2, producing a half-sine-squared (Hann) shape; all grain parameters including FM index are sampled once at trigger time and held fixed for the grain's lifetime.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "GrainIn": {
+    "note": "On each positive zero-crossing of the trigger, a grain of (int)(dur * sampleRate) samples (floored to a minimum of 4) is captured from the live input and multiplied sample-by-sample by an amplitude envelope, then accumulated into output buffers. The default envelope (envbufnum = -1, i.e. winType < 0) is a Hann window generated by a 2-pole sinusoidal resonator: w = pi/N, b1 = 2*cos(w), y1_init = sin(w), y2_init = 0, with recurrence y0 = b1*y1 - y2 and amp = y1^2 per sample; a user buffer selects instead a linearly interpolated table-lookup envelope with winInc = windowSamples/N stepping through the table each sample. All parameters except numChannels and the trigger rate are frozen at grain-spawn time, so changes to dur, pan, or envbufnum take effect only on subsequent triggers; exceeding maxGrains prints \"Too many grains!\" and silently drops the new grain.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "GrainSin": {
+    "note": "Each trigger spawns a grain: a sine wavetable oscillator (32-bit integer phase accumulator, linear interpolation via lookupi1) multiplied sample-by-sample by a Hann envelope generated with a 2-pole IIR resonator — b1 = 2·cos(π/N), y1[0] = sin(π/N), y2[0] = 0, then y0 = b1·y1 − y2, amp = y1² — yielding sin²(kπ/N) exactly. With a custom envbufnum (≥ 0), the envelope is instead linearly interpolated from a user buffer stepped at winInc = bufferSamples/grainSamples. All parameters (freq, dur, pan, envbuf) are latched at grain onset and cannot be modulated mid-grain; oscillator phase always resets to zero at grain start, so synchronous triggers at a fixed rate produce fully coherent partials and audible comb-filtering artifacts unless freq or timing is dithered. maxGrains is a fixed RTAlloc at first k-rate call and cannot change thereafter; exceeding it silently drops new grains.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "GrayNoise": {
+    "note": "Generates noise via a bit-flip recurrence: X_0 = 0; X_{n+1} = X_n XOR (1 << r), where r is a uniformly random integer in [0, 31], flipping one bit of the 32-bit integer accumulator each sample. Output is the integer state multiplied by 4.65661287308e-10 (~1/2^31), mapping to roughly [-1, 1]. The spectrum is emphasized toward lower frequencies and the RMS level is high relative to peak-to-peak level; gray noise has no standard definition like pink or white noise.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "In": {
+    "note": "Reads numChannels consecutive bus values starting at bus index. In.ar enforces strict within-cycle ordering: it reads only samples written by nodes earlier in the node tree during the current block, returning zeros for buses written by later nodes, eliminating unintentional feedback loops (use InFeedback for deliberate audio-rate feedback). In.kr is cycle-agnostic: it reads whatever value is currently on the control bus regardless of whether it was written this cycle, last cycle, or set directly by the client, so control-rate feedback through the node graph is inherently possible. numChannels is fixed at SynthDef compile time and cannot be modulated at runtime.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "InFeedback": {
+    "note": "Reads audio-rate bus data without zeroing previous-cycle samples, adding one block of latency (~1.45 ms at 64/44100). Unlike In.ar (which zeros stale data on read), InFeedback passes bus contents regardless of age, enabling cross-node feedback. Node order matters: a writer before InFeedback overwrites previous-cycle data (only its signal feeds back); writers after InFeedback both contribute previous-cycle samples. For Karplus-Strong, subtract ControlRate.ir.reciprocal from target delay—otherwise delay is too long and pitch will be flat.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "InRange": {
+    "note": "Per-sample comparator: outputs 1.0 if lo <= in <= hi (inclusive on both bounds), else 0.0. The `lo` and `hi` thresholds are read once per control block (ZIN0), not interpolated, so rapid modulation of thresholds at audio rate produces staircase quantization artifacts rather than smooth window sweeps. No state is maintained between samples — output is purely a combinational boolean with no hysteresis, meaning signals hovering at a threshold boundary will produce high-frequency toggling at the control-rate update grid.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "KeyState": {
+    "note": "Control-rate UGen that polls the OS global keyboard state for a given keycode each control period and outputs minval when the key is up or maxval when it is pressed — a binary step function at control rate. The lag argument applies a one-pole smoothing filter (Lag.kr) to soften the hard 0/1 transition, so non-zero lag introduces an exponential glide rather than an instantaneous switch. No signal-rate output is available; timing resolution is therefore limited to the control-block period. On Wayland the poll always returns 0.0 regardless of key state.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "Klank": {
+    "note": "Klank is a fixed-parameter bank of parallel Ringz resonators (constant-skirt-gain IIR filters) driven by the same input; each partial specifies center frequency, per-band amplitude, and a 60 dB ring-decay time (t60). Frequencies and decay times are scaled once at init via freqscale/freqoffset and decayscale; runtime modulation is not possible (use DynKlank). For non-impulse inputs, output amplitude scales linearly with sample rate — 88.2 kHz yields double the amplitude of 44.1 kHz — so cross-rate work requires normalizing by (nominalSr / SampleRate.ir). A Formlet bank is efficiently realized as Klank(decaySpecs) - Klank(attackSpecs).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "LagIn": {
+    "note": "Reads a control-rate bus and applies a one-pole leaky-integrator lowpass per channel: y[n] = z + b1*(y[n-1] - z), where z is the raw bus value and b1 = exp(log(0.001)/(lag*sampleRate)), so the step response decays to 0.1% (-60 dB) in exactly `lag` seconds. When lag==0, b1 is forced to 0, giving instantaneous pass-through with no filter state. The lag coefficient is computed once at construction and is not modulatable at runtime; zapgremlins is applied each sample to flush denormals. The first sample is initialized by a pass-through call (LagIn_next_0), so the filter state y1 starts at the current bus value rather than zero, preventing an initial transient step.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "LatoocarfianC": {
+    "note": "Coupled two-state chaotic map iterated at `freq` Hz with cubic interpolation. Recurrence: x(n+1) = sin(b·y(n)) + c·sin(b·x(n)), y(n+1) = sin(a·x(n)) + d·sin(a·y(n)); output is x. Parameters a and b (range ±3) appear in both cross and self terms; c and d (range 0.5–1.5) scale the self-feedback (second sin) terms. Depending on parameters, output is continuous chaos, silence (convergence to a fixed value), or a cyclic tone; CPU cost is high as the UGen is unoptimized.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "LatoocarfianL": {
+    "note": "Discrete-time chaotic oscillator iterated at an arbitrary freq (Hz), outputting the x sequence with linear interpolation between steps. Recurrence: x[n+1] = sin(b·y[n]) + c·sin(b·x[n]); y[n+1] = sin(a·x[n]) + d·sin(a·y[n]). Parameters a, b in [-3, 3] scale the sinusoidal arguments in their respective output equations; c, d in [0.5, 1.5] scale the self-feedback terms. Depending on parameter values, the map produces continuous chaos, converges to a fixed point (silence), or locks into a periodic cycle (tone); all four params and freq are modulatable.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "LatoocarfianN": {
+    "note": "Coupled 2D discrete chaotic map iterated at a user-set freq (not per-sample by default): x(n+1) = sin(b*y(n)) + c*sin(b*x(n)), y(n+1) = sin(a*x(n)) + d*sin(a*y(n)), outputting x. Recommended parameter ranges: a,b in [-3, +3] and c,d in [0.5, 1.5]; depending on parameters the map can produce continuous chaotic output, converge to a fixed point (silence), or oscillate in a cycle (tonal output). The N variant is non-interpolating (zero-order hold), so staircase artifacts appear at low iteration frequencies.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "LFPulse": {
+    "note": "Non-band-limited pulse oscillator with a double-precision phase accumulator: each sample, phase += freq * sampleDur; when phase >= 1, phase -= 1 (subtraction, not modulo), duty is updated, and one sample of opposite polarity is forced (1 if duty <= 0.5, else 0) — guaranteeing a transition but producing a one-sample artifact when duty is near 0 or 1. Normal output is 1 when phase < duty, else 0. No anti-aliasing; hard 0/1 transitions produce full-spectrum harmonics, causing severe aliasing above ~1–2 kHz.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Line": {
+    "note": "Outputs a finite linear ramp computed entirely at construction time: counter = round(dur * sampleRate), clamped to a minimum of 1; slope = (end - start) / counter. Each sample tick outputs level, then level += slope (double-precision accumulation). Once counter reaches zero the output freezes at the stored end value (float precision, not the accumulated double), and doneAction fires. If dur rounds to zero samples, level is initialized to end and slope is 0, so the UGen immediately outputs end and fires doneAction on the first block. Parameters are read only at Ctor — changing start/end/dur after instantiation has no effect.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Linen": {
+    "note": "Control-rate only, four-stage linear envelope (idle → attack → sustain → release) driven by a gate signal. On a low-to-high gate edge, attack slope is computed as `(susLevel - currentLevel) / attackSamples` and accumulated each k-rate block, meaning a retrigger mid-envelope ramps from the current running level rather than resetting to zero, avoiding discontinuities. Sustain holds the last level; gate dropping to ≤ 0 computes release slope as `-currentLevel / releaseSamples` (always targeting 0, never a user-set end level), while gate ≤ -1 triggers forced release with `releaseTime = -gate - 1`. Both susLevel and attackTime are latched at the trigger edge and are not modulatable mid-stage; releaseTime is read only at release onset.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "LinExp": {
+    "note": "Maps a linear input range to an exponential output range per-sample using out = dstlo * (dsthi/dstlo)^((in - srclo)/(srchi - srclo)), which is a pure power-of-ratio lookup with no state or feedback. The precomputed coefficients are dstratio = dsthi/dstlo, rsrcrange = 1/(srchi - srclo), and rrminuslo = -srclo * rsrcrange, collapsing the per-sample work to a single pow() call: out = dstlo * pow(dstratio, in * rsrcrange + rrminuslo). Because dstratio = dsthi/dstlo appears as the base of the exponent, dstlo and dsthi must be nonzero and same-sign — if they differ in sign dstratio is negative and pow() of a negative base is undefined for non-integer exponents, producing NaN. When srclo equals srchi, rsrcrange becomes infinity and the output is undefined; similarly, input values outside [srclo, srchi] are extrapolated along the same exponential curve rather than clamped. Boundary parameters (srclo, srchi, dstlo, dsthi) can be modulated at audio rate, in which case coefficients are recomputed every sample with no smoothing, so abrupt parameter jumps cause instantaneous output discontinuities.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "LinkJump": {
+    "note": "A control-rate UGen that imperatively repositions the Ableton Link timeline by remapping the beat/time relationship on a gate trigger (gate > 0). The beat argument b must satisfy 0 <= b < quantum (q); on trigger, the server requests that beat b align to the current moment within the grid defined by q. With force > 0 this \"rudely\" overwrites the shared timeline for all peers; without force, the remap is a cooperative request whose effect depends on whether other Link clients are present. Returns -1.0 if LinkPhase.start has not been called on the server, otherwise 0.0; repeated or dense triggering (e.g. via Dust) will produce audible clock jitter.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "LinkPhase": {
+    "note": "Outputs the server's shared Ableton Link clock phase as a ramp over [0, quantum), where quantum is the modulus applied to the global Link step count — all clients sharing the same quantum value share identical phase. Tempo is set in cps (not BPM). To derive sub-quantum or super-quantum pulse signals without changing quantum, apply phase arithmetic on the output (e.g., LinkPhase.kr(4)*16 % 1.0) rather than selecting a smaller quantum. Returns -1.0 if the server has not joined a Link session via LinkPhase.start.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "LinXFade2": {
+    "note": "Computes a mono mix via the lerp formula out = inA + amp*(inB - inA), where amp = pan*0.5 + 0.5, mapping pan [-1, +1] linearly to amp [0, 1]; this is identical to (1-amp)*inA + amp*inB but cheaper. The pan argument is hard-clipped to [-1, 1]; at control rate, amp is linearly interpolated across the block (slope = delta/blockSize) only when pan has changed, otherwise the block runs at fixed amp. At audio rate, clipping and coefficient recomputation occur per sample with no inter-sample interpolation. Unlike XFade2 (equal-power sine/cosine curves), the crossfade is linear in amplitude, so summed power dips up to 6 dB at pan=0; the struct holds only m_pos and m_amp — the documented level argument has no effect in the actual DSP code.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "LocalIn": {
+    "note": "Defines synth-local feedback buses, paired with LocalOut to form an explicit single-sample-block feedback loop: values written by LocalOut appear at LocalIn exactly one block period later (latency = blockSize / sampleRate). Only one audio-rate and one control-rate LocalIn may exist per SynthDef; channel count is fixed at graph-compile time. The mandatory one-block delay must be compensated when targeting frequencies above ~20 Hz — in a Karplus-Strong/resonator context this means subtracting ControlRate.ir.reciprocal from the desired delay time. Initial bus values are set by the `default` argument, written once before the first LocalOut overwrite, preventing undefined feedback on the first cycle.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "LocalOut": {
+    "note": "Writes an array of signals into synth-local feedback buses defined by a paired LocalIn, enabling self-contained feedback loops without consuming global bus resources. The critical constraint is a mandatory one-block latency: audio written by LocalOut is not available to LocalIn until the next control block, so the effective minimum round-trip delay is blockSize/sampleRate. For pitched feedback paths (Karplus-Strong style resonators), this one-block offset must be explicitly subtracted from the desired delay time — e.g., DelayC.ar(sig, maxDel, freq.reciprocal - ControlRate.ir.reciprocal) — or pitch will be flat. Channel count is fixed at SynthDef compile time and must match the LocalIn declaration exactly.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "Logistic": {
+    "note": "Iterates y[n] = r * y[n-1] * (1 - y[n-1]) in double precision, where r is chaosParam and y is initialized to the init argument; output stays in [0,1] for r in [0,4] but diverges outside that range. The ctor selects between two calc functions: if chaosParam is scalar-rate AND freq >= sampleRate, every sample is a new iteration (Logistic_next_1); otherwise freq controls iteration rate (sampleRate/freq samples per step, minimum 1), holding y between steps (Logistic_next_k). Chaos onset is near r=3.57; the output has a DC offset, so LeakDC or a mul/add rescale is recommended for AC-coupled contexts.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "MFCC": {
+    "note": "Takes a pre-computed FFT chain and maps spectral magnitude bins onto up to 42 Mel-scale triangular filterbanks (80 Hz–18 kHz, equally spaced in Mel: mel = 1127·ln(1 + f/700)), where each band uses linear triangular overlap weighting between consecutive peak centres. Band energies are then passed through a DCT (cosine basis cos(π/42·(n+0.5)·k), k=1..numcoeff) to produce decorrelated cepstral coefficients; the zeroth DCT coefficient is intentionally omitted. Outputs 1–42 coefficients (default 13), loosely normalised to 0–1 with coefficient 1 typically dominant; expects FFT size 1024 at 44.1/48 kHz or 2048 at 88.2/96 kHz for accurate Mel spacing.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "MidEQ": {
+    "note": "Parametric peaking EQ implemented as dry-path-plus-scaled-bandpass: output = x[n] + a0*(y0 - y2), where y0 = x[n] + b1*y1 + b2*y2 is the recursive two-pole resonator state and (y0 - y2) is its bandpass output. Coefficients: C = 1/tan(rq * freq * pi / sr), D = 2*cos(2*pi*freq/sr), b1 = C*D/(1+C), b2 = (1-C)/(1+C), a0 = (10^(db/20) - 1)/(1+C); db=0 gives a0=0 and unity passthrough. At very low rq (narrow band) or high freq, the half-bandwidth argument rq*freq*pi/sr approaches zero, driving tan toward zero and C toward infinity, collapsing b2 toward -1 and risking marginal resonator stability; parameters are linearly interpolated over the control block (mFilterSlope) to suppress coefficient-discontinuity clicks.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "NRand": {
+    "note": "Init-rate only — the value is computed once at synth creation and never updated. Sums n independent uniform [0,1) draws via frand(), averages them (sum/n), then linearly maps to [lo, hi): output = (sum/n) * (hi-lo) + lo. This keeps the mean fixed at (lo+hi)/2 for all n while reducing variance by factor 1/n, producing a distribution that converges toward Gaussian by the CLT (n=1 uniform, n=2 triangular, n≥3 increasingly bell-shaped). n is cast to int at ctor time; fractional or negative values are silently truncated, and n=0 produces NaN (float 0.0/0 division) rather than a valid output.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Osc": {
+    "note": "Linear-interpolating wavetable lookup oscillator. The buffer must be pre-converted to SC's internal wavetable format (via asWavetable or b_gen with wavetable=true), which stores interleaved pairs (2·a[n]−a[n+1], a[n+1]−a[n]) per slot — not (a[n], a[n+1]−a[n]) — because the fixed-point fractional accumulator (PhaseFrac1) yields values in [1,2) rather than [0,1), requiring this pre-distorted base; buffer size must be a power of 2. A fixed-point phase accumulator (cpstoinc = bufSize * SAMPLEDUR * 65536) advances per sample, and the fractional remainder drives linear interpolation via lookupi1: val1 + val2 * pfrac. The phase argument adds a radians offset at audio or control rate (valid range ±8pi; wrap with .mod(2pi) for large modulation); both freq and phase are audio-rate-modulatable, supporting FM and PM synthesis directly.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Out": {
+    "note": "Writes (adds) a signal to a numbered audio or control bus by summing into the bus buffer — contents from earlier nodes are accumulated, not replaced. The lowest bus indices are written to hardware outputs. Channel count is fixed at SynthDef compile time; mismatched widths silently read/write past intended bus boundaries, as SC does not enforce channel alignment. Subject to control-rate block-boundary jitter at audio rate — use OffsetOut where sample-accurate scheduling is required.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Pan4": {
+    "note": "Decomposes 2D position into two independent equal-power sine-table pans: x maps left/right gains as leftAmp = sine[2048 - ix], rightAmp = sine[ix] (ix = clip(int(1024*x + 1024 + 0.5), 0, 2048)); y maps front/back gains symmetrically (frontAmp = sine[iy], backAmp = sine[2048 - iy]). The sine table is a full 8192-point table, so indices 0–2048 span a quarter period (0 to π/2); at center (x=y=0) each lookup yields sin(π/4) = √2/2, making each of the four Cartesian-product gains level/2 and total power exactly level^2. When any coordinate exceeds [-1,1], the code projects (x,y) radially onto the unit-square boundary before the lookup. Any change in xpos, ypos, or level (all checked once per block) triggers per-sample linear slope interpolation across all four combined gains; level is smoothed via that same mechanism, not left unsmoothed.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PanAz": {
+    "note": "Distributes one input across N outputs using cyclic equal-power panning: for each channel i, chanpos = ((pos * N/2 + width/2 + orientation) - i) / width, then wrapped modulo N/width, and the channel gain is level * mSine[4096 * chanpos], where mSine is a full 8192-point sine table — so chanpos maps [0,1) through a half-sine hump (0→0, 0.5→peak, →1→0), not a monotonically decreasing quarter-sine. Only channels with chanpos < 1 receive signal. With control-rate pos (ak mode), gains are linearly slope-interpolated sample-by-sample across the block; with audio-rate pos (aa mode), gains are recomputed every sample with no smoothing, so fast modulation can produce zipper artifacts. The width parameter has its absolute value taken (negatives identical to positives); default width=2 covers exactly two channels with equal-power panning and no gaps at channel boundaries; values below 1 introduce silent gaps, values above 2 spread energy across more channels. orientation is a DC offset added before channel subtraction, shifting the whole mapping.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PanB": {
+    "note": "Encodes a mono source into first-order B-format (W, X, Y, Z) using the standard Furse-Malham amplitude coefficients: W = (1/sqrt(2))·gain·in, X = cos(az)·cos(el)·gain·in, Y = −sin(az)·cos(el)·gain·in, Z = sin(el)·gain·in. Azimuth and elevation are looked up via a table-based sin/cos (no per-sample trig), computed once per control block; when any parameter changes, all four channel amplitudes are linearly interpolated across the block via CALCSLOPE, giving zipper-free modulation at the cost of one-block lag. Because angles are sampled at block boundaries rather than per-sample, fast audio-rate azimuth sweeps will alias at the block rate. The W channel is direction-independent (omnidirectional pressure), always scaled by 1/sqrt(2); gain scales all four outputs uniformly with no additional normalization.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PanB2": {
+    "note": "Encodes mono to B-format (W, X, Y): W = in*(1/sqrt(2))*level, X = in*cos(θ)*level, Y = in*(-sin(θ))*level, where θ is derived from azimuth via a kSineSize sine-table lookup (cosine from a quarter-period offset). Azimuth and level are read once per block (ZIN0); if either changes, all three channel amplitudes are linearly interpolated sample-by-sample to suppress clicks. The negative-sin Y convention places azimuth=+0.5 to the right, matching the help doc. The UGen is memoryless (no feedback).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PlayBuf": {
+    "note": "Reads a server-resident buffer via a double-precision phase accumulator incremented each sample by rate (frames/sample; 1.0 = original pitch, negative = reverse). Output uses 4-point, 3rd-order Hermite interpolation (x-form): cubicinterp(frac, x[n-1], x[n], x[n+1], x[n+2]), with boundary table pointers replicated (non-loop) or wrapped (loop) to stay in-bounds. With loop=0, sc_loop sets mDone when phase >= bufFrames-1 (forward) or phase < 0 (reverse) and clamps phase to that boundary; doneAction fires after the block. With loop=1, loopMax = bufFrames and sc_loop wraps modulo bufFrames, using floor(in/hi) for multi-period overshoots. The trig input retriggers only on a positive-going zero crossing (prevtrig<=0 to trig>0), resetting phase to startPos; a held-high trig will not re-trigger until it goes low first.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Pluck": {
+    "note": "Karplus-Strong feedback delay with an in-loop one-pole filter. Each sample: a cubic-interpolated tap `value` is filtered as `onepole = (1 - |coef|)*value + coef*lastsamp`, then `thisin + feedbk*onepole` is written back to the delay buffer and `onepole` is output. The loop gain is `feedbk = exp(ln(0.001) * delaytime / |decaytime|)`, with the sign of decaytime copied to feedbk so negative decaytime inverts the feedback polarity (boosting odd harmonics). On a negative-to-positive trigger edge, the excitation input is admitted for exactly `round(delaytime * sampleRate)` samples with a hard rectangular window and zero elsewhere; the schelp's \"n/2\" claim is incorrect — the code uses the full delay length. `coef` drives timbre: near 0 it is a nearly flat loop filter; as |coef| approaches 1 the `(1-|coef|)` gain term vanishes and output converges toward the previous sample (strong low-pass/integrator effect); values outside (-1, 1) are admitted without clamping and will cause exponential blow-up.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PSinGrain": {
+    "note": "Generates a single sine grain using a 2-pole IIR resonator (no table lookup): y[n] = b1·y[n-1] − y[n-2], b1 = 2·cos(ω), with initial conditions y[-1] = −sin(ω)·amp, y[-2] = −sin(2ω)·amp, producing a sine-phase (zero-crossing start) output at freq Hz. The amplitude envelope is a running quadratic: level[n+1] = level[n] + slope[n], slope[n+1] = slope[n] + curve, where slope₀ = 4·(1/N − 1/N²) and curve = −8/N² (N = duration in samples), giving a smooth zero-to-zero arc peaking near the midpoint. All three parameters (freq, dur, amp) are read only at construction time and fixed for the grain's lifetime; the UGen self-terminates via NodeEnd when the sample counter expires. Amp scales the initial conditions directly, so the envelope peak approximates amp; the resonator accumulates floating-point drift over long grains.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PulseDivider": {
+    "note": "Increments an integer counter on each positive-going zero-crossing of the trigger input (prevtrig <= 0, curtrig > 0); when counter >= div the counter resets to 0 and a single-sample unit impulse (1.0) is emitted, otherwise output is 0. The div argument is integer-truncated per block (not rounded), while the start argument is rounded to the nearest integer at construction — so a negative start offsets the first fire by |start| additional input triggers beyond the normal div count. No sample-rate smoothing or interpolation is applied to div changes, so live-modulating div mid-count can cause an early or late first output if the new value crosses the current counter state.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_Add": {
+    "note": "Performs bin-wise complex addition of two FFT frames directly in rectangular (real/imaginary) form — no polar conversion — operating on buf1 in-place: real_out[k] = real_A[k] + real_B[k], imag_out[k] = imag_A[k] + imag_B[k], with dc and nyq bins handled as scalar reals. Because addition in the complex domain corresponds to linear superposition of spectra, the result is identical to mixing the two time-domain signals before analysis, so it yields no novel spectral interaction; however, applied post-FFT it allows mixing processed chains independently before IFFT. Magnitude and phase at each bin depend on the vector sum, so bins where the two signals are near phase-opposition cancel, making phase coherence between the two chains the dominant behavioral variable — unrelated or asynchronously windowed sources will exhibit frame-to-frame phase variation that produces comb-like amplitude fluctuation after IFFT. No stability concerns; no feedback path.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_BinScramble": {
+    "note": "Each trigger fires a Fisher-Yates shuffle producing destination-index array to[] over all bins, then for each destination k = to[i], a source index from[i] is drawn uniformly from [max(0, k − width), min(N−1, k + width)] where width = floor(param * N), so the width parameter directly constrains spectral locality. At render time, wipe determines scrambleBins = floor(N * wipe): bins j < scrambleBins are remapped via q[to[j]] = p[from[j]], while bins j >= scrambleBins copy identity as q[to[j]] = p[to[j]], meaning even the \"unscrambled\" portion is permuted through to[] unless wipe == 1. DC and Nyquist are always passed through unmodified. If FFT buffer size changes mid-stream, that frame is silently skipped; arrays are allocated and first shuffle run on the first processed frame, not at construction.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_BinShift": {
+    "note": "Remaps each input FFT bin i to output position fpos = shift + i*stretch, writing the complex bin value there (zeroing unused output bins first). Without interpolation, fpos is rounded to the nearest integer bin; with interp=1, the complex value is linearly split between floor(fpos) and floor(fpos)+1 with weights (1-beta) and beta where beta = fpos - floor(fpos), allowing multiple source bins to accumulate into the same destination. Bins mapping outside [0, numbins) are silently discarded, DC and Nyquist are copied verbatim. Stretch > 1 expands the spectrum (pitch-scales up, losing high bins past Nyquist); stretch < 1 compresses it toward DC; non-integer shift adds a linear frequency offset in bin units (one bin = sampleRate/FFTSize Hz); combining both simultaneously produces an affine frequency warp that is NOT a phase-coherent pitch shift.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_BinWipe": {
+    "note": "Performs a hard spectral crossfade by replacing complex FFT bins in bufA with those from bufB. The integer wipe count is computed as (int)(wipe * numbins) — C truncation toward zero, not floor — clamped to [-numbins, numbins]. When wipe > 0, DC plus the bottom `wipe` complex bins [0..wipe-1] are overwritten from bufB (nyquist copied only when wipe == numbins). When wipe < 0, the top |wipe| complex bins [numbins+wipe..numbins-1] and nyquist are always overwritten from bufB (DC copied only when wipe == -numbins). At wipe==0 the output is identical to bufA; the transition is a sharp bin-boundary cut, so spectral discontinuities at the wipe boundary are expected. The operation works directly on bufA's complex (not polar) data in place.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_BrickWall": {
+    "note": "Operates per FFT frame by zeroing a contiguous range of complex spectral bins in-place. The integer bin count is computed as `(int)(wipe * numbins)` (C truncation toward zero, not floor — these differ for negative wipe); for wipe > 0 (highpass), DC and bins [0, count) are zeroed, with Nyquist also cleared only when count reaches numbins; for wipe < 0 (lowpass), bins from index (numbins + count) to numbins-1 are zeroed, Nyquist is always cleared, and DC only when the full range is wiped (wipe == -1). Cutoff is hard (rectangular window in frequency domain = sinc ringing in time domain after IFFT). Because wipe is re-evaluated each FFT hop, fast modulation causes per-frame discontinuities with no smoothing or interpolation between frames.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_CopyPhase": {
+    "note": "Operates per FFT frame on bufferA's polar representation in-place: for each non-DC/Nyquist bin, magnitude is taken from bufferA and phase is replaced wholesale with bufferB's phase (p->bin[i].mag unchanged, p->bin[i].phase = q->bin[i].phase). Both buffers are converted via ToPolarApx (LUT-based approximate polar, not exact hypot/atan2), introducing a small magnitude approximation. For the real-only DC and Nyquist bins, the implementation negates bufferA's value when its sign disagrees with bufferB's (aligning polarity). The output buffer is bufferA (buf1); bufferB is read but not written.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_Div": {
+    "note": "Performs bin-wise complex division of bufA by bufB, writing results back into bufA. For each non-DC/Nyquist bin, the result is computed as true complex division: re_out = (re_A * re_B + im_A * im_B) / |B|^2, im_out = (im_A * re_B - re_A * im_B) / |B|^2, where |B|^2 = re_B^2 + im_B^2 (no hypot call — raw sum-of-squares). DC and Nyquist are divided as reals. No zero-guard is applied to the denominator magnitude, so near-zero bins in bufB produce ±Inf or NaN, which will silently corrupt subsequent PV processing; callers must pre-condition bufB (e.g., add a small epsilon) if spectral nulls are possible.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_LocalMax": {
+    "note": "Operates on each FFT frame in polar-approximate form (ToPolarApx): a bin survives if its magnitude is >= the scalar threshold AND >= both immediate neighbors (using strict < in the comparison, so equal neighbors do not cause zeroing). Bins that fail either test have only their magnitude zeroed, leaving phase untouched. DC is compared against threshold and bin[0].mag (via std::abs(p->dc)); Nyquist is compared against threshold and the last regular bin's magnitude (via std::abs(p->nyq)). The result is a sparse spectral frame retaining local magnitude peaks above threshold; a plateau of equal-magnitude adjacent bins all survive since the neighbor comparison is < (not <=).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_MagAbove": {
+    "note": "Operates on the approximate polar form of the FFT frame (ToPolarApx — LUT-based magnitude approximation, not exact hypot). For every bin including DC and Nyquist, if mag < threshold the magnitude is set to 0.0 while the phase is left untouched; bins at or above threshold pass through unmodified. This is a hard spectral gate with no interpolation or fade, so sweeping the threshold produces discontinuous amplitude jumps at frame boundaries. Threshold is sampled once per FFT frame (ZIN0), so modulating it at audio rate has no effect — changes only take hold on the next hop boundary.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_MagBelow": {
+    "note": "Operates per FFT frame in approximate polar form (ToPolarApx): for each bin, if mag > threshold, mag is zeroed; otherwise the bin passes through unchanged. The DC and Nyquist real components are treated as magnitudes directly (|dc| > thresh → dc = 0, same for nyq). The threshold is sampled once per FFT frame (ZIN0), so modulating it at audio rate has no effect within a frame. Because zeroing is hard (not a smooth taper), the filter has a binary pass/reject characteristic with no frequency-selectivity — it retains only the spectral residue below the amplitude floor, useful for isolating noise or low-level partials.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_MagClip": {
+    "note": "Converts each FFT frame to approximate polar form (ToPolarApx), then hard-clamps every bin's magnitude: bin[i].mag = min(bin[i].mag, thresh), leaving phase untouched. DC and Nyquist real bins receive a signed clamp — sign(x)*thresh when |x|>thresh — preserving polarity. Because only magnitudes are bounded, dominant partials are attenuated to the ceiling while quieter bins pass through unchanged, producing spectral flattening/brightening at low thresholds. No cross-bin coupling, no feedback; ToPolarApx is a fast approximation, so clipping acts on approximate (not exact) magnitudes.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_MagDiv": {
+    "note": "Performs per-bin spectral division in polar-approximate form: for each FFT bin i, output magnitude = magA[i] / max(magB[i], zeroed), with DC and Nyquist bins handled identically; phases are taken unchanged from bufferA. The zeroed parameter (default 0.0001) acts as a floor on the denominator, preventing division-by-zero rather than clamping the output ratio — so with a near-silent bufferB and a small zeroed value, output magnitudes can blow up dramatically (reciprocal of the floor). Because ToPolarApx uses a fast magnitude approximation, the division is approximate; exact magnitude fidelity is not guaranteed. Phase incoherence between bufferA and bufferB introduces no artifact here since only bufferA phases are retained.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_MagFreeze": {
+    "note": "Operates per FFT frame in polar-approximate form (ToPolarApx). When freeze > 0, every bin magnitude plus the DC and Nyquist scalars are replaced by a snapshot from the most recent unfrozen frame; phases are left untouched, so the live phase accumulation continues rotating, producing smearing/vibrato rather than a true static freeze. On the first processed frame, freeze is forced to 0 (m_mags is null, allocated lazily), ensuring the magnitude buffer is populated before any frozen read. If numbins changes between frames (e.g. FFT buffer resize), the function returns early and skips processing regardless of freeze state — output stalls until the bin count matches again.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_MagMul": {
+    "note": "Converts both FFT buffers to approximate polar form (ToPolarApx) each analysis frame, then multiplies magnitudes bin-by-bin — including the DC and Nyquist real terms — writing results back into bufA while leaving bufA's phases entirely untouched. Effectively: |A'[k]| = |A[k]| * |B[k]|, phase[k] = phase_A[k]. Because ToPolarApx is used (not exact polar conversion), there is a small approximation error in the magnitude extraction, but it is symmetric across both buffers and negligible for most audio use. No division or clamping is applied, so if bufB magnitudes are large the product is unbounded; callers must scale outputs to avoid overflow before IFFT reconstruction.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_MagNoise": {
+    "note": "Each FFT frame, every bin's magnitude (and dc/nyq scalars) is multiplied by an independent uniform random scalar drawn from [-1, +1). In polar-coordinate buffers only the magnitude is touched, leaving phase intact; in complex-coordinate buffers the same scalar multiplies both real and imaginary parts, so a negative draw also flips the bin's phase by pi — a non-obvious side effect that adds phase randomisation on top of spectral smearing. The noise is i.i.d. per bin per hop, producing a spectrally diffuse, noise-modulated output whose long-term average power is reduced to one-third of the input (E[r^2] = 1/3 for U[-1,1]).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_MagSmear": {
+    "note": "Applies a uniform rectangular (boxcar) averaging kernel to FFT bin magnitudes while leaving phases untouched. For each bin j with integer half-width W (clipped to [0, numbins-1]), the output magnitude is (1/(2W+1)) * sum of p[j-W..j+W].mag, with out-of-range bins excluded from the sum but the divisor staying fixed at (2W+1) — so boundary bins near DC and Nyquist are attenuated rather than renormalized. DC and Nyquist scalar values are passed through unchanged. Smearing is applied once per FFT frame from a temporary buffer, so there is no cross-frame accumulation — purely intra-frame spatial smoothing that spreads spectral energy into neighboring bins, blurring sharp peaks and raising the noise floor between harmonics without any phase modification.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_MagSquared": {
+    "note": "Operates on the polar-approximation form of the FFT buffer (ToPolarApx), replacing every bin's magnitude with its square: mag[i] = mag[i]^2, and squaring DC and Nyquist real components directly (p->dc * p->dc, p->nyq * p->nyq); phases are untouched. No renormalization is performed in PV_MagSquared_next — the help-doc claim of \"renormalizes to previous peak\" is absent from the source. Squaring expands the dynamic range contrast in the spectral domain: weak bins (mag << 1) are driven strongly toward zero while bins near 1 are barely attenuated, yielding a spectral sharpening / noise-gating effect. Output energy grows if any bin's magnitude exceeds 1.0 (squaring amplifies values > 1), so upstream gain staging is critical to avoid spectral blowup.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_Max": {
+    "note": "Compares two FFT frames bin-by-bin in approximate polar form (ToPolarApx) and retains, for each bin, whichever complex value has the greater magnitude; the winner's full complex bin (both mag and phase) is written to bufferA, discarding the other. DC and Nyquist are handled separately by absolute-value comparison of their real scalars. Because phase is dragged wholesale from the dominant frame, the output spectrum's phase coherence tracks whichever source is louder per bin per FFT hop, producing discontinuous phase across hops when the dominant source alternates — expect transient smearing in IFFT reconstruction. No smoothing or hysteresis is applied, so rapid alternation between sources at similar magnitudes yields maximum per-hop instability.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_Min": {
+    "note": "Operates per-FFT-frame in approximate polar form (ToPolarApx): for each spectral bin i, if magB[i] < magA[i], the entire polar bin — both magnitude and phase — is copied from bufB into bufA; otherwise bufA's bin is retained unchanged. DC and Nyquist are real scalars only (no phase), compared by absolute value, and the smaller scalar replaces the larger — there is no phase to carry for these bins. Because the winning bin's phase is carried wholesale for regular bins, the output phase is a hard switch rather than a blend, so combining two sources with very different phase relationships can produce abrupt timbral artifacts. The result is written in-place to bufA's buffer, leaving bufB unmodified; bufA is the output chain handle.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_Mul": {
+    "note": "Performs per-bin complex multiplication of two FFT frames in-place into bufferA. DC and Nyquist bins are real scalars multiplied directly (dc_A *= dc_B, nyq_A *= nyq_B). Each complex bin uses a 3-multiply Karatsuba form: real_out = Re_A*Re_B - Im_A*Im_B, imag_out = (Re_A+Im_A)*(Re_B+Im_B) - Re_A*Re_B - Im_A*Im_B. This is circular convolution of the two time-domain signals, so output magnitude = |A||B| and phase = arg(A)+arg(B) at each bin.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_PhaseShift": {
+    "note": "Operates in the polar-approximate domain (ToPolarApx), adding a single scalar `shift` (radians) to every spectral bin's phase each FFT frame, leaving magnitudes untouched. With integrate=0, the same offset is applied independently each frame — a static uniform-phase rotation with no temporal accumulation. With integrate>0, `shift` is accumulated into a running sum (wrapped via fmod mod 2π each frame) and the accumulated value is applied to all bins, so total phase grows linearly at `shift` radians per hop.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_PhaseShift270": {
+    "note": "Rotates every FFT bin by 270° (-90°) via exact complex multiplication by -j: for each bin (a + jb), the output is (b - ja), implemented as `real = imag; imag = -real` (old real). This is the discrete Hilbert-transform complement to PV_PhaseShift90, and together they form a quadrature pair. Operation is exact (no polar conversion, no approximation), parameter-free, and has no stability edge-cases; DC and Nyquist bins in the SCComplexApx layout are not explicitly treated, so their behavior follows whatever values occupy those slots after `ToComplexApx`.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "PV_PhaseShift90": {
+    "note": "Applies a uniform +90° phase rotation to every FFT bin via the complex swap (re, im) → (−im, re), equivalent to multiplying each bin by j (e^{jπ/2}). This is lossless and magnitude-preserving: no bin's amplitude changes, only its phase. The transform is applied identically to all bins (including DC and Nyquist) regardless of frequency — it is not a true Hilbert transform, which would require frequency-dependent handling of positive vs. negative frequency bins. No parameters; the only operational constraint is that the FFT buffer must be valid at each control-rate trigger.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_RandComb": {
+    "note": "Operates on the FFT complex bins each hop: on first hop (or a rising trigger edge) a random shuffle is run over the numbins bins — iterating i from 0 to numbins-1 and swapping m_ordering[i] with a randomly chosen index j in [0, numbins-i-1] — producing a permutation stored in m_ordering[]. Each hop, n = clip(int(wipe * numbins), 0, numbins) bins are zeroed (both real and imaginary) by indexing that permuted list in order, so wipe sweeps a deterministic-but-randomly-sequenced comb of nulled bins from 0% to 100% of the spectrum. DC and Nyquist are excluded from the shuffle and only forced to zero when n reaches numbins exactly. Triggering mid-wipe re-shuffles without resetting n, so zeroed-bin density is preserved but spectral positions change discontinuously.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_RandWipe": {
+    "note": "Each FFT frame, a random permutation of bin indices is computed (the shuffle picks j in [0, numbins-i) each iteration — not a standard Fisher-Yates); `wipe`, scaled to `n = sc_clip(floor(wipe * numbins), 0, numbins)`, selects the first n entries. For each selected bin index k, the complex bin (magnitude and phase) from bufferB is written directly into the corresponding bin of bufferA with no interpolation — hard per-bin replacement. The output is bufferA modified in-place. A positive-going edge on `trig` re-shuffles the permutation; without a trigger the ordering is frozen (a buffer-size change silently no-ops that frame).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_RectComb": {
+    "note": "Each FFT frame, a rectangular comb mask is swept across the numbins+2 spectral slots (DC, bins 0..numbins-1, Nyquist) by accumulating a normalized frequency step freq = numTeeth / (numbins+1) per slot, starting at the user-supplied phase (range 0..1, wrapping modulo 1). Any slot whose running phase strictly exceeds width has its value zeroed; slots where phase <= width are passed unchanged. The result is numTeeth evenly spaced passbands per spectrum, each occupying a fraction width of the total bandwidth. Because phase and width are plain floats re-read every FFT hop, the comb pattern can shift continuously mid-frame with no interpolation, causing abrupt spectral jumps at hop boundaries; width >= 1.0 passes all bins while width < 0.0 zeros all bins (at width = 0.0, a slot with phase exactly 0.0 still passes).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "PV_RectComb2": {
+    "note": "Performs a rectangular spectral interleave between two FFT buffers, writing the result into bufferA. DC, each bin, then Nyquist are each tested: if the running phase (starting at user-supplied `phase`, incrementing by `freq = numTeeth / (numbins + 1)` per bin, wrapping modulo 1) exceeds `width`, that bin is taken from bufferB, otherwise bufferA's value is kept. The phase cursor is read fresh from control-rate inputs each FFT frame — no state accumulates across frames.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "RHPF": {
+    "note": "Second-order resonant high-pass filter implemented as a direct-form IIR biquad with bilinear-transform-derived coefficients: D = tan(ω·rq/2), C = (1−D)/(1+D), b1 = (1+C)·cos(ω), b2 = −C, a0 = (1+C+b1)/4, where ω = 2πf/sr. State update is y0 = a0·x + b1·y1 + b2·y2, and the high-pass output is extracted as y0 − 2·y1 + y2, encoding the feedforward numerator in the state difference rather than separate feedforward taps. rq is clamped to 0.001 to prevent D collapsing to zero (which would make C=1 and destabilize the denominator); near-zero freq produces near-zero ω, making D≈0, C≈1, b1≈2, b2≈−1 — a nearly-marginally-stable resonator that causes the documented glitching. Coefficient changes are smoothed by linear interpolation across the block (mFilterSlope), and denormals are suppressed on y1/y2 via zapgremlins each block.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "RLPF": {
+    "note": "Second-order IIR resonant lowpass implemented as a biquad with a double zero at Nyquist (z = -1). Coefficients are computed from pfreq = freq * radiansPerSample and D = tan(pfreq * rq * 0.5): C = (1-D)/(1+D), b1 = (1+C)*cos(pfreq), b2 = -C, a0 = (1+C-b1)*0.25; state update is y0 = a0*x + b1*y1 + b2*y2 with output y0 + 2*y1 + y2 (numerator [a0, 2a0, a0]). rq (reciprocal-Q = BW/fc) is clamped to 0.001 to prevent division-by-zero instability, but freq near 0 still risks blowup since tan(pfreq*rq/2) collapses. At audio rate, coefficients are interpolated in 3-sample sub-blocks across the control block (via mFilterSlope/mFilterLoops) when freq or rq change, avoiding zipper noise but not guaranteeing stability mid-transition.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "RunningSum": {
+    "note": "Rectangular-window sliding sum over a `numsamp`-length circular buffer (init-only): each sample, the oldest entry is subtracted, the new input written in its place and added — giving y[n] = sum(x[n-numsamp+1..n]) at O(1) cost. A dual-accumulator (Ross Bencina): additions also accumulate in `sum2`; every `numsamp` samples the primary sum resets to `sum2` and `sum2` clears, bounding drift to one window's rounding. For RMS: `(RunningSum.ar(input.squared, n) / n).sqrt`.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "SinOscFB": {
+    "note": "A sine oscillator with single-operator phase-modulation feedback: each output sample is fed back as phase input for the next sample, scaled by the feedback argument (in radians). At low feedback the waveform transitions from sine toward sawtooth-like as feedback amplitude increases; overmodulation causes chaotic, non-periodic oscillation. The feedback equation in the source is phase[n] = sin(phase_accum + feedback_radians * out[n-1]), with feedback converted from radians to internal phase units. Frequency is updated only at control rate (default 64-sample blocks), so audio-rate frequency modulation at higher modulation frequencies produces audible aliasing artifacts.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "SpecPcile": {
+    "note": "Operates on an FFT chain (kr rate): accumulates a cumulative distribution function over bin magnitudes from DC to Nyquist, then finds the bin index where the CDF first meets or exceeds the target fraction (0–1). Output is that bin's center frequency in Hz (or raw bin index if binout=1). With interpolate=1, linear interpolation on the bin number refines the estimate at modest CPU cost. Useful as a spectral roll-off detector (e.g. fraction=0.9 gives the frequency below which 90% of spectral energy sits).",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Spring": {
+    "note": "Simulates a damped mass-spring system via Euler integration: each sample computes net force as `force = (in * c) - (pos * k * c)` where c = 1/sampleRate and k is the spring constant, then updates velocity as `vel = (vel + force) * (1 - damp)` and position as `pos += vel`, outputting `force * sampleRate`. The damp parameter is a per-sample velocity multiplier subtracted from 1, so damp=0 is lossless and damp=1 kills all velocity instantly; small values (0.00001–0.1) yield ringing resonance. Both spring constant and input force are scaled by SAMPLEDUR, making resonant frequency and amplitude sample-rate-dependent — patch designed at 44.1 kHz will behave differently at 48 kHz. Stability requires damp > 0 and spring small enough that the system does not diverge; large spring values with near-zero damping will blow up.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "Tap": {
+    "note": "A pure-SC wrapper around PlayBuf with no C++ backend. At SynthDef compile time it computes a fixed read offset n = delaytime * (SampleRate.ir.neg * BufRateScale.kr(bufnum)) frames, then calls PlayBuf.ar with rate=BufRateScale.kr(bufnum), trigger=0, startPos=n, loop=1; the negative startPos wraps modulo bufFrames under looping, placing the read head exactly delaytime seconds behind the write head (assuming both start in sync, as in the BufWr+Phasor idiom). Because delaytime is a compile-time SC literal rather than a modulatable UGen input, it is baked in at build time — changing it requires freeing and rebuilding the SynthDef. BufRateScale compensation keeps the tap tempo-correct when the buffer's native sample rate differs from the server rate, but if the buffer is smaller than delaytime * sampleRate frames the startPos wrap lands at the wrong phase and the effective delay is buffer-length-modulo, not the requested value.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "TBall": {
+    "note": "Simulates a point mass bouncing on an audio-rate vibrating surface using single-sample Euler integration: each sample applies gravity (g = g_in * sampleDur) as vel -= g; pos += vel, then tests collision (dist = pos - floor). On bounce (dist <= 0), pos is reflected (pos = floor - dist), velocity becomes the relative impact velocity (vel = floorvel - vel) scaled by damping coefficient (1 - damp), and that post-damping velocity is emitted as a pulse; all non-bounce samples output 0, making the signal a sparse impulse train. A sticky-friction zone of radius k = friction * g_in pulls the ball to the floor with a stiff spring (inter = sampleDur * 10000) when within k, and hard-locks it when within 0.5% of k, preventing jitter for slow-moving surfaces. Critically, k scales with gravity, so raising g simultaneously widens the capture zone and increases bounce energy, and very high g_in combined with a slowly-moving floor risks the ball locking permanently; pos and prev_floor are computed in double precision to reduce drift over long trajectories.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  },
+  "TwoZero": {
+    "note": "Second-order FIR (all-zero, no feedback) implementing y[n] = x[n] + b1*x[n-1] + b2*x[n-2], where b1 = -2*radius*cos(freq*radiansPerSample) and b2 = radius^2; the zero pair sits at complex conjugate positions on the z-plane at angle freq*radiansPerSample and radial distance radius. At radius=1 the zeros land exactly on the unit circle, producing a complete spectral null at freq; values below 1 move zeros inside the circle, softening the notch. When freq or radius changes mid-block, b1 and b2 are linearly interpolated every 3 samples across the block (the LOOP macro unrolls 3 samples per iteration; mFilterSlope = 1/mFilterLoops, mFilterLoops = bufLength/3), so coefficient updates are smooth but the filter remains FIR throughout — no stability concern, but gain is not normalized, so output magnitude scales with radius^2 as radius grows.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "VarSaw": {
+    "note": "A phasor-based sawtooth-triangle oscillator using a single normalized phase accumulator (incremented by freq/sampleRate per sample). Output is computed piecewise each sample: when phase < duty, out = phase*(2/duty) - 1 (rising ramp from -1 to +1); when phase >= duty, out = (1-phase)*(2/(1-duty)) - 1 (falling ramp from +1 to -1). The duty parameter (clamped to [0.001, 0.999]) is only latched at cycle boundaries (phase wrap), so width changes take effect at the next wrap rather than immediately, and audio-rate width modulation produces stepped updates once per cycle rather than continuous reshaping. No anti-aliasing is applied; if freq exceeds sampleRate the accumulator grows by more than 1.0 per sample but the wrap logic only subtracts 1.f once per sample, so phase can exceed the valid [0,1] range, causing incorrect output — the documented instability above the sampling rate.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "Vibrato": {
+    "note": "Outputs a frequency (Hz) by adding a squared-envelope LFO deviation to the fundamental; the LFO ramps 0→1→0→-1→0 per cycle, scaled by `depth` (a proportion of `freq`, e.g. 0.02 = 2%). After a `delay` period, an onset ramp scales modulation depth from zero to full; `rateVariation` and `depthVariation` inject per-cycle noise as proportions of their parameters, with `depthVariation` applied independently to up and down half-cycles. Since `rate` is sampled only at cycle boundaries, setting it to 0 mid-cycle stalls the oscillator indefinitely.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "VOsc": {
+    "note": "Wavetable lookup oscillator that interpolates linearly between two adjacent, consecutively allocated buffers based on a fractional bufpos parameter; integer bufpos selects a single table, fractional values crossfade between floor(bufpos) and ceil(bufpos). All buffers must be the same power-of-two size and stored in SuperCollider's interleaved wavetable format (Signal:-asWavetable or b_gen with wavetable flag). Phase modulation is additive in radians at the lookup stage. Frequency argument runs at control rate only (non-interpolated), so audio-rate FM requires an external phase accumulator rather than the freq input.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-distill"
+  },
+  "VOsc3": {
+    "note": "Three wavetable oscillators running at independent, non-interpolated control-rate frequencies (freq1/2/3), mixed to a single output. The bufpos argument is a fractional buffer index that interpolates between two adjacent wavetable-format buffers of the same power-of-two size, enabling continuous timbral morphing. Buffers must be pre-converted to SC's internal wavetable format (asWavetable or wavetable:true) and can be allocated consecutively (Buffer.allocConsecutive) for contiguous bufpos sweeping.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-distill"
+  },
+  "Wrap": {
+    "note": "Performs sample-by-sample modular wrapping into [lo, hi): out = in - range * floor((in - lo) / range), where range = hi - lo. A fast single-subtraction/addition shortcut handles the common case where the input overshoots by less than one range width; the floor-based formula fires only for larger excursions. When lo == hi, the output is clamped to lo. When lo and hi are control-rate, they are linearly interpolated per sample via CALCSLOPE; audio-rate bounds (aa/ak/ka variants) are read per sample with no interpolation. Driving hi below lo makes range negative, which is not guarded against and produces undefined/unpredictable output, not a clean inversion.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": false,
+    "source": "ai-from-source"
+  },
+  "XFade2": {
+    "note": "Weighted sum out[n] = inA[n]*La + inB[n]*Lb where La = level * sine[2048 - ipos] and Lb = level * sine[ipos], with ipos = clip(round(1024*pan + 1024), 0, 2048) mapping pan=[-1..+1] linearly to a quarter-sine wavetable (2049 entries). This yields constant-power mixing: at pan=0 both gains are level*sin(π/4) ≈ 0.707*level; at pan=±1 one gain is level and the other is 0. When pan is control-rate and changes between blocks, gains ramp linearly sample-by-sample within the block via slope interpolation (nextamp - curamp) * slopeFactor, suppressing zipper noise; when pan is audio-rate, ipos is recomputed each sample from the wavetable so the sine-law holds instantaneously, while level itself still slope-interpolates if it changes.",
+    "confidence": "high",
+    "grounded": true,
+    "passedFirstTry": true,
+    "source": "ai-from-source"
+  }
+}

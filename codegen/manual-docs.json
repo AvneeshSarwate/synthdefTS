@@ -1,0 +1,12 @@
+{
+  "_comment": "Hand-written one-liners for UGens whose .schelp has no summary:: tag. Keys override extracted summaries; entries may also set a category path.",
+  "AccelerometerX": { "summary": "Accelerometer X-axis sensor input (device builds), scaled via minval/maxval/warp/lag.", "category": "UGens>User interaction" },
+  "AccelerometerY": { "summary": "Accelerometer Y-axis sensor input (device builds), scaled via minval/maxval/warp/lag.", "category": "UGens>User interaction" },
+  "AccelerometerZ": { "summary": "Accelerometer Z-axis sensor input (device builds), scaled via minval/maxval/warp/lag.", "category": "UGens>User interaction" },
+  "BlockSize": { "summary": "Outputs the server's block size (samples per control-rate period).", "category": "UGens>Info" },
+  "ClearBuf": { "summary": "Zeroes the contents of a buffer.", "category": "UGens>Buffer" },
+  "ListDUGen": { "summary": "Base for demand-rate list UGens that sequence values from a list.", "category": "UGens>Demand" },
+  "NodeID": { "summary": "Outputs the node ID of the synth containing this UGen.", "category": "UGens>Info" },
+  "ScopeOut2": { "summary": "Writes a signal to a ScopeBuffer for oscilloscope display.", "category": "UGens>InOut" },
+  "SetBuf": { "summary": "Writes a list of values into a buffer at init time.", "category": "UGens>Buffer" }
+}
